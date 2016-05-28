@@ -42,7 +42,9 @@ afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),HAUTEUR1 is HAUTEUR+1,afficher_l
 
 afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 
-%ChoixDesPieces
+%ChoixDesPieces 
+/* placement piece test coordonnée mais pas l'existence d'une autre piece*/
+
 choisir_pieces:- write('Piece 1: hauteur:'),read(A),write('Piece 1: largeur:'),read(B),test_piece_coord(A,B).
 
 test_piece_coord(X,Y):-X>0,X<7,Y>0,Y<7,write('Piece placée').
