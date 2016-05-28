@@ -1,8 +1,9 @@
 /* IA02 jeu de khan */
 
-plateau([[1,2,3,1,2,3],[1,2,3,1,2,3],[1,2,3,1,2,3],[1,2,3,1,2,3],[1,2,3,1,2,3],[1,2,3,1,2,3]]).
-pions1([[1,2],[2,3],[4,5],[0,2]]).
-pions2([[3,5],[4,3],[6,5],[0,0]]).
+
+plateau([[2,3,1,2,2,3],[2,1,3,1,3,1],[1,3,2,3,1,2],[3,1,2,1,3,2],[2,3,1,3,1,3],[2,1,3,2,2,1]]).
+pions1([[1,2],[2,3],[4,5],[1,6]]).
+pions2([[3,5],[4,3],[6,5],[6,6]]).
 test([1,2,3,4,5,6]).
 
 %affichageDuPlateau	
@@ -38,7 +39,7 @@ afficher_coord_aux(X):-write(' '),write(X),X1 is X+1,write('  '),afficher_coord_
 afficher_coord(_):-write('  '),afficher_coord_aux(1).
 
 afficher_plateau([],_).
-afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),HAUTEUR1 is HAUTEUR+1,afficher_liste(X,0,HAUTEUR),nl,br_aux(_),nl,afficher_plateau(L,HAUTEUR1).
+afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),HAUTEUR1 is HAUTEUR+1,afficher_liste(X,1,HAUTEUR),nl,br_aux(_),nl,afficher_plateau(L,HAUTEUR1).
 
 afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 
