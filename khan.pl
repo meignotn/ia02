@@ -14,10 +14,10 @@ br(X):-write('-'),X1 is X-1,br(X1).
 br_aux(_):-write('   '),br(23).
 
 %FonctionTestPionPas %PasTermine
+
 is_equal([],[]).
 is_equal([H1|T1],[H2|T2]):- H1=:=H2,is_equal(T1,T2).
-estpion_aux([],_).
-estpion_aux([X|_],P):-is_equal(P,X).
+estpion_aux([X|_],P):-is_equal(X,P).
 estpion_aux([_|Q],P):-estpion_aux(Q,P).
 estpion1(L,H):-pions1(X),estpion_aux(X,[L,H]).
 estpion2(L,H):-pions2(X),estpion_aux(X,[L,H]).
