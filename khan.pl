@@ -7,24 +7,14 @@ plateau([	[2,3,1,2,2,3],
 			[3,1,2,1,3,2],
 			[2,3,1,3,1,3],
 			[2,1,3,2,2,1]]).
-
-%pionsEquipe1(LARGEUR,HAUTEUR)
-:- dynamic pions1/2.
-pions1(0,0).
-pions1(0,0).
-pions1(0,0).
-pions1(0,0).
-pions1(0,0).
-pions1(0,0).
-
-%pionsEquipe2(LARGEUR,HAUTEUR)
-:- dynamic pions2/2.
-pions2(0,0).
-pions2(0,0).
-pions2(0,0).
-pions2(0,0).
-pions2(0,0).
-pions2(0,0).
+%kalista rouge
+:-dynamic kalistar/2.
+%sbires rouge
+:-dynamic sbireR/2.
+%sbires ocre
+:-dynamic sbireO/2.
+%kalista ocre
+:-dynamic kalistao/2.
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
@@ -35,9 +25,10 @@ br(X):-write('-'),X1 is X-1,br(X1).
 br_aux(_):-write('   '),br(23).
 
 %FonctionTestPionPas.
-estpion1(L,H):-pions1(L,H).
-estpion2(L,H):-pions2(L,H).
-
+estSbireRouge(L,H):-sbireR(L,H).
+estSbireOcre(L,H):-sbireO(L,H).
+estKalistaRouge(L,H):-kalistar(L,H). 
+estKalistaOcre(L,H):-kalistao(L,H). 
 %TestCase
 estCase1(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
 estCase1Aux([X|_],LARGEUR,1):-write(X),estCase1Aux2(X,LARGEUR).
@@ -57,16 +48,30 @@ estCase3Aux([_|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase3Aux(Q,LARGEUR,
 estCase3Aux2([X|_],1):-X=:=3.
 estCase3Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase3Aux2(Q,LARGEUR1).
 
-/*affichage des case du plateaux*/
-afficher_pion(X,L,H):-X =:= 1,estpion1(L,H),ansi_format([bg(yellow),fg(black)], ' x ',[world]),!.
-afficher_pion(X,L,H):-X =:= 1,estpion2(L,H),ansi_format([bg(yellow),fg(white)], ' o ',[world]),!.
-afficher_pion(X,_,_):-X =:= 1,ansi_format([bg(yellow),fg(white)], '   ',[world]),!.
-afficher_pion(X,L,H):-X =:= 2,estpion1(L,H),ansi_format([bg(magenta),fg(black)], ' x ',[world]),!.
-afficher_pion(X,L,H):-X =:= 2,estpion2(L,H),ansi_format([bg(magenta),fg(white)], ' o ',[world]),!.
-afficher_pion(X,_,_):-X =:= 2,ansi_format([bg(magenta),fg(white)], '   ',[world]),!.
-afficher_pion(X,L,H):-X =:= 3,estpion1(L,H),ansi_format([bg(red),fg(black)], ' x ',[world]),!.
-afficher_pion(X,L,H):-X =:= 3,estpion2(L,H),ansi_format([bg(red),fg(white)], ' o ',[world]),!.
-afficher_pion(X,_,_):-X =:= 3,ansi_format([bg(red),fg(white)], '   ',[world]),!.
+/*affichage des case du plateaux jaune=1 rose =2 rouge =3*/
+afficher_pion(X,L,H):-X =:= 1,estSbireRouge(L,H),ansi_format([bg(cyan),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 1,estSbireOcre(L,H),ansi_format([bg(cyan),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 1,estSbireRouge(L,H),ansi_format([bg(cyan),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 1,estSbireOcre(L,H),ansi_format([bg(cyan),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 1,estKalistaRouge(L,H),ansi_format([bold,bg(cyan),fg(red)], ' K ',[world]),!.
+afficher_pion(X,L,H):-X =:= 1,estKalistaOcre(L,H),ansi_format([bold,bg(cyan),fg(white)], ' K ',[world]),!.
+afficher_pion(X,_,_):-X =:= 1,ansi_format([bg(cyan),fg(white)], '   ',[world]),!.
+
+afficher_pion(X,L,H):-X =:= 2,estSbireRouge(L,H),ansi_format([bg(blue),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 2,estSbireOcre(L,H),ansi_format([bg(blue),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 2,estSbireRouge(L,H),ansi_format([bg(blue),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 2,estSbireOcre(L,H),ansi_format([bg(blue),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 2,estKalistaRouge(L,H),ansi_format([bold,bg(blue),fg(red)], ' K ',[world]),!.
+afficher_pion(X,L,H):-X =:= 2,estKalistaOcre(L,H),ansi_format([bold,bg(blue),fg(white)], ' K ',[world]),!.
+afficher_pion(X,_,_):-X =:= 2,ansi_format([bg(blue),fg(white)], '   ',[world]),!.
+
+afficher_pion(X,L,H):-X =:= 3,estSbireRouge(L,H),ansi_format([bg(black),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 3,estSbireOcre(L,H),ansi_format([bg(black),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 3,estSbireRouge(L,H),ansi_format([bg(black),fg(red)], ' x ',[world]),!.
+afficher_pion(X,L,H):-X =:= 3,estSbireOcre(L,H),ansi_format([bg(black),fg(white)], ' o ',[world]),!.
+afficher_pion(X,L,H):-X =:= 3,estKalistaRouge(L,H),ansi_format([bold,bg(black),fg(red)], ' K ',[world]),!.
+afficher_pion(X,L,H):-X =:= 3,estKalistaOcre(L,H),ansi_format([bold,bg(black),fg(white)], ' K ',[world]),!.
+afficher_pion(X,_,_):-X =:= 3,ansi_format([bg(black),fg(white)], '   ',[world]),!.
 
 afficher_coord_aux(7):-nl.
 afficher_coord_aux(X):-write(' '),write(X),X1 is X+1,write(' '),afficher_coord_aux(X1).
@@ -78,38 +83,44 @@ afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1
 afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 
 %ChoixDesPieces 
-choix_pions1(0):-afficher_plat(_).
-choix_pions1(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_1(_),choix_pions1(N1).
+choix_sbire_rouge(0):-afficher_plat(_).
+choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
+choisir_sbire_rouge(_):-write('Piece rouge: largeur:'),read(A),write('Piece rouge: hauteur:'),read(B),place_sbire_rouge(A,B).
+place_sbire_rouge(_,B):-B>2,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
+place_sbire_rouge(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
+place_sbire_rouge(A,B):-B<3,libre(A,B),assert(sbireR(A,B)),write('piece placée'),nl,!.
 
-choisir_pion_1(_):-write('Piece 1: largeur:'),read(A),write('Piece 1: hauteur:'),read(B),place_pion1(A,B).
+choix_sbire_ocre(0):-afficher_plat(_).
+choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
+choisir_pion_ocre(_):-write('Piece ocre: largeur:'),read(A),write('Piece ocre: hauteur:'),read(B),place_sbire_ocre(A,B).
+place_sbire_ocre(_,B):-B<5,write('placement impossible'),nl,choisir_pion_ocre(_),!.
+place_sbire_ocre(A,B):-B>4,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
+place_sbire_ocre(A,B):-B>4,libre(A,B),assert(sbireO(A,B)),write('piece placée'),nl,!.
 
-place_pion1(_,B):-B>2,write('placement impossible'),nl,choisir_pion_1(_),!.
-place_pion1(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_1(_).
-place_pion1(A,B):-B<3,libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placée'),nl,!.
+choisir_kalista_rouge(_):-write('Kalista rouge: largeur:'),read(A),write('Kalista rouge: hauteur:'),read(B),place_kalista_rouge(A,B).
+place_kalista_rouge(_,B):-B>2,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
+place_kalista_rouge(A,B):-B<3,libre(A,B),assert(kalistar(A,B)),write('kalista placée'),nl,!.
 
-choix_pions2(0):-afficher_plat(_).
-choix_pions2(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_2(_),choix_pions2(N1).
-choisir_pion_2(_):-write('Piece 2: largeur:'),read(A),write('Piece 2: hauteur:'),read(B),place_pion2(A,B).
-place_pion2(_,B):-B<5,write('placement impossible'),nl,choisir_pion_2(_),!.
-place_pion2(A,B):-B>4,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_2(_).
-place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write('piece placée'),nl,!.
+choisir_kalista_ocre(_):-write('Kalista ocre: largeur:'),read(A),write('Kalista ocre: hauteur:'),read(B),place_kalista_ocre(A,B).
+place_kalista_ocre(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_ocre(_),!.
+place_kalista_ocre(A,B):-B>4,libre(A,B),assert(kalistao(A,B)),write('kalista placée'),nl,!.
 
 
 
 %CaseOccupeOuLibre?
-libre(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
-occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),pions1(LARGEUR,HAUTEUR),!.
-occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),pions2(LARGEUR,HAUTEUR),!.
+libre(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),not(estSbireRouge(LARGEUR,HAUTEUR)),not(estSbireOcre(LARGEUR,HAUTEUR)).
+occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),estSbireRouge(LARGEUR,HAUTEUR),!.
+occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),estSbireOcre(LARGEUR,HAUTEUR),!.
 estOK(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7.
 
-%mouvementPossible orgl->largeur du pion d origine , orh -> hauteur origine , newL -> nouvelle largeur
-estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
-estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
-estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
+%mouvementPossible orgl->largeur du pion d origine , orh -> hauteur origine , newL -> nouvelle largeur %TODO INCLURE KALISTA DANS LES MOUVEMENT
+estPossibleRouge(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
+estPossibleRouge(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
+estPossibleRouge(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
 
-estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
-estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
-estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
+estPossibleOcre(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
+estPossibleOcre(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
+estPossibleOcre(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
 
 
 %cheminPossible depuis (ORGL,ORGH) vers (NEWL,NEWH)
@@ -124,11 +135,11 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH-1),cheminPossible(ORGL,OR
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH+1),cheminPossible(ORGL,ORGH+1,NEWL,NEWH,2).
 
 %mouvement
-moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions1(ORGL,ORGH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
-moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),pions2(NEWL,NEWH),retract(pions1(ORGL,ORGH)),retract(pions2(NEWL,NEWH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
-moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions2(ORGL,ORGH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
-moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),pions1(NEWL,NEWH),retract(pions2(ORGL,ORGH)),retract(pions1(NEWL,NEWH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
+moveRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(sbireR(ORGL,ORGH)),assert(sbireR(NEWL,NEWH)),afficher_plat(_).
+moveRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),estSbireRouge(NEWL,NEWH),retract(sbireR(ORGL,ORGH)),retract(sbireO(NEWL,NEWH)),assert(sbireR(NEWL,NEWH)),afficher_plat(_).
+moveOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(sbireO(ORGL,ORGH)),assert(sbireO(NEWL,NEWH)),afficher_plat(_).
+moveOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),estSbireRouge(NEWL,NEWH),retract(sbireO(ORGL,ORGH)),retract(sbireR(NEWL,NEWH)),assert(sbireO(NEWL,NEWH)),afficher_plat(_).
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
+initBoard(_):-afficher_plat(_),write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5).
 main(_):-initBoard(_).
