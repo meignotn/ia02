@@ -103,11 +103,11 @@ estOK(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7.
 %mouvementPossible orgl->largeur du pion d origine , orh -> hauteur origine , newL -> nouvelle largeur
 estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
 estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
-estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
+estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion1(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
 
 estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase1(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,1).
 estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase2(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
-estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,2).
+estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estpion2(ORGL,ORGH),estCase3(ORGL,ORGH),cheminPossible(ORGL,ORGH,NEWL,NEWH,3).
 
 
 %cheminPossible depuis (ORGL,ORGH) vers (NEWL,NEWH)
@@ -120,6 +120,12 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL-1,ORGH),cheminPossible(ORGL-1,
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL+1,ORGH),cheminPossible(ORGL+1,ORGH,NEWL,NEWH,2).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH-1),cheminPossible(ORGL,ORGH-1,NEWL,NEWH,2).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH+1),cheminPossible(ORGL,ORGH+1,NEWL,NEWH,2).
+
+%mouvement
+moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions1(ORGL,ORGH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
+moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),pions2(NEWL,NEWH),retract(pions1(ORGL,ORGH)),retract(pions2(NEWL,NEWH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
+moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions2(ORGL,ORGH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
+moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),pions1(NEWL,NEWH),retract(pions2(ORGL,ORGH)),retract(pions1(NEWL,NEWH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
 
 %lancementJeu
 initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
