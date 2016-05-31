@@ -39,19 +39,19 @@ estpion1(L,H):-pions1(L,H).
 estpion2(L,H):-pions2(L,H).
 
 %TestCase
-estCase1(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
+estCase1(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
 estCase1Aux([X|Q],LARGEUR,1):-write(X),estCase1Aux2(X,LARGEUR).
 estCase1Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase1Aux(Q,LARGEUR,HAUTEUR1).
 estCase1Aux2([X|Q],1):-X=:=1.
 estCase1Aux2([X|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase1Aux2(Q,LARGEUR1).
 
-estCase2(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase2Aux(X,LARGEUR,HAUTEUR).
+estCase2(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase2Aux(X,LARGEUR,HAUTEUR).
 estCase2Aux([X|Q],LARGEUR,1):-write(X),estCase2Aux2(X,LARGEUR).
 estCase2Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase2Aux(Q,LARGEUR,HAUTEUR1).
 estCase2Aux2([X|Q],1):-X=:=2.
 estCase2Aux2([X|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase2Aux2(Q,LARGEUR1).
 
-estCase3(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase3Aux(X,LARGEUR,HAUTEUR).
+estCase3(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase3Aux(X,LARGEUR,HAUTEUR).
 estCase3Aux([X|Q],LARGEUR,1):-write(X),estCase3Aux2(X,LARGEUR).
 estCase3Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase3Aux(Q,LARGEUR,HAUTEUR1).
 estCase3Aux2([X|Q],1):-X=:=3.
@@ -99,10 +99,11 @@ place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write(
 
 
 %CaseOccupeOuLibre?
-libre(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
-occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,HAUTEUR),!.
-occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
-	
+libre(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
+occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),pions1(LARGEUR,HAUTEUR),!.
+occupe(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),pions2(LARGEUR,HAUTEUR),!.
+estOK(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7.
+
 %mouvementPossible orgl->largeur du pion d origine , orh -> hauteur origine , newL -> nouvelle largeur
 estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=1,estCase1(ORGL,ORGH).
 estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=2,estCase2(ORGL,ORGH).
