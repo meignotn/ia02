@@ -1,8 +1,14 @@
 /* IA02 jeu de khan */
 
 
-plateau([[2,3,1,2,2,3],[2,1,3,1,3,1],[1,3,2,3,1,2],[3,1,2,1,3,2],[2,3,1,3,1,3],[2,1,3,2,2,1]]).
+plateau([	[2,3,1,2,2,3],
+			[2,1,3,1,3,1],
+			[1,3,2,3,1,2],
+			[3,1,2,1,3,2],
+			[2,3,1,3,1,3],
+			[2,1,3,2,2,1]]).
 
+%pionsEquipe1(LARGEUR,HAUTEUR)
 :- dynamic pions1/2.
 pions1(0,0).
 pions1(0,0).
@@ -11,6 +17,7 @@ pions1(0,0).
 pions1(0,0).
 pions1(0,0).
 
+%pionsEquipe2(LARGEUR,HAUTEUR)
 :- dynamic pions2/2.
 pions2(0,0).
 pions2(0,0).
@@ -31,6 +38,24 @@ br_aux(_):-write('   '),br(23).
 estpion1(L,H):-pions1(L,H).
 estpion2(L,H):-pions2(L,H).
 
+%TestCase
+estCase1(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
+estCase1Aux([X|Q],LARGEUR,1):-write(X),estCase1Aux2(X,LARGEUR).
+estCase1Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase1Aux(Q,LARGEUR,HAUTEUR1).
+estCase1Aux2([X|Q],1):-X=:=1.
+estCase1Aux2([X|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase1Aux2(Q,LARGEUR1).
+
+estCase2(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase2Aux(X,LARGEUR,HAUTEUR).
+estCase2Aux([X|Q],LARGEUR,1):-write(X),estCase2Aux2(X,LARGEUR).
+estCase2Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase2Aux(Q,LARGEUR,HAUTEUR1).
+estCase2Aux2([X|Q],1):-X=:=2.
+estCase2Aux2([X|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase2Aux2(Q,LARGEUR1).
+
+estCase3(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7,plateau(X),estCase3Aux(X,LARGEUR,HAUTEUR).
+estCase3Aux([X|Q],LARGEUR,1):-write(X),estCase3Aux2(X,LARGEUR).
+estCase3Aux([X|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase3Aux(Q,LARGEUR,HAUTEUR1).
+estCase3Aux2([X|Q],1):-X=:=3.
+estCase3Aux2([X|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase3Aux2(Q,LARGEUR1).
 
 /*affichage des case du plateaux*/
 afficher_pion(X,L,H):-X =:= 1,estpion1(L,H),ansi_format([bg(yellow),fg(black)], ' x ',[world]),!.
