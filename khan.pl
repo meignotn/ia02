@@ -59,8 +59,8 @@ choix_pions1(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_1(_),choix_pi
 choisir_pion_1(_):-write('Piece 1: largeur:'),read(A),write('Piece 1: hauteur:'),read(B),place_pion1(A,B).
 
 place_pion1(_,B):-B>2,write('placement impossible'),!.
-place_pion1(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_1(_).
-place_pion1(A,B):-B<3,libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placée'),!.
+place_pion1(A,B):-B<3,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_pion_1(_).
+place_pion1(A,B):-B<3,libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placee'),!.
 
 choix_pions2(0).
 choix_pions2(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_2(_),choix_pions2(N1).
