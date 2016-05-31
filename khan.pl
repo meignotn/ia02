@@ -129,3 +129,4 @@ moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),pions1(NEWL,NEWH
 
 %lancementJeu
 initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
+main(_):-initBoard(_).

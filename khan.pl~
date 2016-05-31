@@ -125,7 +125,8 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH+1),cheminPossible(ORGL,OR
 moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions1(ORGL,ORGH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
 moveJ1(ORGL,ORGH,NEWL,NEWH):-estPossibleJ1(ORGL,ORGH,NEWL,NEWH),pions2(NEWL,NEWH),retract(pions1(ORGL,ORGH)),retract(pions2(NEWL,NEWH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
 moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),libre(NEWL,NEWH),retract(pions2(ORGL,ORGH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
-moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),pions1(NEWL,NEWH),retract(pions2(ORGL,ORGH)),retract(pions1(NEWL,NEWH)),assert(pions1(NEWL,NEWH)),afficher_plat(_).
+moveJ2(ORGL,ORGH,NEWL,NEWH):-estPossibleJ2(ORGL,ORGH,NEWL,NEWH),pions1(NEWL,NEWH),retract(pions2(ORGL,ORGH)),retract(pions1(NEWL,NEWH)),assert(pions2(NEWL,NEWH)),afficher_plat(_).
 
 %lancementJeu
 initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
+main(_):-initBoard(_),
