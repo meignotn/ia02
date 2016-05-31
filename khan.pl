@@ -53,23 +53,23 @@ afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1
 afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 
 %ChoixDesPieces 
-choix_pions1(0).
+choix_pions1(0):-afficher_plat(_).
 choix_pions1(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_1(_),choix_pions1(N1).
 
 choisir_pion_1(_):-write('Piece 1: largeur:'),read(A),write('Piece 1: hauteur:'),read(B),place_pion1(A,B).
 
-place_pion1(_,B):-B>2,write('placement impossible'),!.
+place_pion1(_,B):-B>2,write('placement impossible'),nl,choisir_pion_1(_),!.
 place_pion1(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_1(_).
-place_pion1(A,B):-B<3,libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placée'),!.
+place_pion1(A,B):-B<3,libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placée'),nl,!.
 
-choix_pions2(0).
+choix_pions2(0):-afficher_plat(_).
 choix_pions2(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_2(_),choix_pions2(N1).
 
 choisir_pion_2(_):-write('Piece 2: largeur:'),read(A),write('Piece 2: hauteur:'),read(B),place_pion2(A,B).
 
-place_pion2(_,B):-B<5,write('placement impossible'),!.
+place_pion2(_,B):-B<5,write('placement impossible'),nl,choisir_pion_2(_),!.
 place_pion2(A,B):-B>4,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_2(_).
-place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write('piece placée'),!.
+place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write('piece placée'),nl,!.
 
 
 
@@ -77,3 +77,5 @@ place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write(
 libre(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,HAUTEUR),!.
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
+
+%mouvmentpossible
