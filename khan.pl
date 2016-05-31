@@ -78,4 +78,5 @@ libre(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,not(pions1(LARGE
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,HAUTEUR),!.
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
 
-%mouvmentpossible
+%lancementJeu
+initBoard(_):-afficher_plat(_),choix_pions1(5),choix_pions2(5).
