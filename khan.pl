@@ -102,9 +102,14 @@ place_pion2(A,B):-B>4,libre(A,B),retract(pions2(0,0)),assert(pions2(A,B)),write(
 libre(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,HAUTEUR),!.
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
-
+	
 %mouvement
-%estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH)
+estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=1,estCase1(ORGL,ORGH).
+estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=2,estCase2(ORGL,ORGH).
+estPossibleJ1(ORGL,ORGH,NEWL,NEWH):-estpion1(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=3,estCase3(ORGL,ORGH).
 
+estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estpion2(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=1,estCase1(ORGL,ORGH).
+estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estpion2(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=2,estCase2(ORGL,ORGH).
+estPossibleJ2(ORGL,ORGH,NEWL,NEWH):-estpion2(ORGL,ORGH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=3,estCase3(ORGL,ORGH).
 %lancementJeu
 initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
