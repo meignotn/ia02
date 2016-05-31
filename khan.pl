@@ -79,4 +79,4 @@ occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,
 occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),choix_pions1(5),choix_pions2(5).
+initBoard(_):-afficher_plat(_),write('placement sbires joueur1'),choix_pions1(5),write('placement sbires joueurs 2'),choix_pions2(5).
