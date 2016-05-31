@@ -82,6 +82,8 @@ disp([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1
 	write([F1,F2,F3,F4,F5,F6]),write('|'),nl,
 	nl,nl.
 	
+
+	
 go :- initBoardRouge, placementReineRouge([a1(double),a2(triple),a3(simple),a4(double),a5(double),a6(triple),b1(double),b2(simple),b3(triple),b4(simple),b5(triple),b6(simple),c1(simple),c2(triple),c3(double),c4(triple),c5(simple),c6(double),d1(triple),d2(simple),d3(double),d4(simple),d5(triple),d6(double),e1(double),e2(triple),e3(simple),e4(triple),e5(simple),e6(triple),f1(double),f2(simple),f3(triple),f4(double),f5(double),f6(simple)],A),
 	placementSbireRouge(A,5,F),
 	placementReineOcre(F,C),

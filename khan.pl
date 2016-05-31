@@ -2,10 +2,22 @@
 
 
 plateau([[2,3,1,2,2,3],[2,1,3,1,3,1],[1,3,2,3,1,2],[3,1,2,1,3,2],[2,3,1,3,1,3],[2,1,3,2,2,1]]).
-pions1([[1,5],[2,3],[4,5],[1,6]]).
-pions2([[3,5],[4,3],[6,5],[6,6]]).
-test([1,2,3,4,5,6]).
 
+:- dynamic pions1/2.
+pions1(0,0).
+pions1(0,0).
+pions1(0,0).
+pions1(0,0).
+pions1(0,0).
+pions1(0,0).
+
+:- dynamic pions2/2.
+pions2(0,0).
+pions2(0,0).
+pions2(0,0).
+pions2(0,0).
+pions2(0,0).
+pions2(0,0).
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
@@ -15,14 +27,10 @@ br(0).
 br(X):-write('-'),X1 is X-1,br(X1).
 br_aux(_):-write('   '),br(23).
 
-%FonctionTestPionPas %PasTermine
+%FonctionTestPionPas.
+estpion1(L,H):-pions1(L,H).
+estpion2(L,H):-pions2(L,H).
 
-is_equal([],[]).
-is_equal([H1|T1],[H2|T2]):- H1=:=H2,is_equal(T1,T2).
-estpion_aux([X|_],P):-is_equal(X,P).
-estpion_aux([_|Q],P):-estpion_aux(Q,P).
-estpion1(L,H):-pions1(X),estpion_aux(X,[L,H]).
-estpion2(L,H):-pions2(X),estpion_aux(X,[L,H]).
 
 /*affichage des case du plateaux*/
 afficher_pion(X,L,H):-X =:= 1,estpion1(L,H),ansi_format([bg(yellow),fg(black)], ' x ',[world]),!.
@@ -45,14 +53,17 @@ afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1
 afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 
 %ChoixDesPieces 
-/* placement piece test coordonnée mais pas l'existence d'une autre piece*/
+choix_pions1(0).
+choix_pions1(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_1(_),choix_pions1(N1).
 
-choisir_pieces:- write('Piece 1: hauteur:'),read(A),write('Piece 1: largeur:'),read(B),test_piece_coord(A,B).
+choisir_pion_1(_):-write('Piece 1: largeur:'),read(A),write('Piece 1: hauteur:'),read(B),place_pion1(A,B).
 
-test_piece_coord(X,Y):-X>0,X<7,Y>0,Y<7,write('Piece placée').
-test_piece_coord(X,_):-X<0,nl,ansi_format([bold,fg(red)], 'placement impossible',[world]),nl,choisir_pieces.
-test_piece_coord(_,Y):-Y<0,nl,ansi_format([bold,fg(red)], 'placement impossible',[world]),nl,choisir_pieces.
-test_piece_coord(X,_):-X>6,nl,ansi_format([bold,fg(red)], 'placement impossible',[world]),nl,choisir_pieces.
-test_piece_coord(_,Y):-Y>6,nl,ansi_format([bold,fg(red)], 'placement impossible',[world]),nl,choisir_pieces.
+place_pion1(A,B):-occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_1(_).
+place_pion1(A,B):-libre(A,B),retract(pions1(0,0)),assert(pions1(A,B)),write('piece placée').
 
 
+
+%CaseOccupeOuLibre?
+libre(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,not(pions1(LARGEUR,HAUTEUR)),not(pions2(LARGEUR,HAUTEUR)).
+occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions1(LARGEUR,HAUTEUR),!.
+occupe(LARGEUR,HAUTEUR):-HAUTEUR>0,HAUTEUR<7,LARGEUR>0,LARGEUR<7,pions2(LARGEUR,HAUTEUR),!.
