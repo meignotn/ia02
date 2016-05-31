@@ -2,11 +2,10 @@
 
 
 plateau([[2,3,1,2,2,3],[2,1,3,1,3,1],[1,3,2,3,1,2],[3,1,2,1,3,2],[2,3,1,3,1,3],[2,1,3,2,2,1]]).
-pions1(p1,p2,p3,p4).
+pions1([[1,5],[2,3],[4,5],[1,6]]).
 pions2([[3,5],[4,3],[6,5],[6,6]]).
 test([1,2,3,4,5,6]).
 
-add(X,
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
@@ -48,7 +47,7 @@ afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 %ChoixDesPieces 
 /* placement piece test coordonnée mais pas l'existence d'une autre piece*/
 
-choisir_pieces:- write('Piece 1: hauteur:'),read(A),write('Piece 1: largeur:'),read(B),test_piece_coord(A,B),.
+choisir_pieces:- write('Piece 1: hauteur:'),read(A),write('Piece 1: largeur:'),read(B),test_piece_coord(A,B).
 
 test_piece_coord(X,Y):-X>0,X<7,Y>0,Y<7,write('Piece placée').
 test_piece_coord(X,_):-X<0,nl,ansi_format([bold,fg(red)], 'placement impossible',[world]),nl,choisir_pieces.
