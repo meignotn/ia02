@@ -1,0 +1,47 @@
+
+/*Placement des pièces du joueur 1*/
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,N,E2,E3,E4,E5,E6,F1,F2,F3,F4,F5,F6],25,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,kr,E2,E3,E4,E5,E6,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,N,E3,E4,E5,E6,F1,F2,F3,F4,F5,F6],26,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,kr,E3,E4,E5,E6,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,N,E4,E5,E6,F1,F2,F3,F4,F5,F6],27,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,kr,E4,E5,E6,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,N,E5,E6,F1,F2,F3,F4,F5,F6],28,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,kr,E5,E6,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,N,E6,F1,F2,F3,F4,F5,F6],29,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,kr,E6,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,N,F1,F2,F3,F4,F5,F6],30,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,kr,F1,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,N,F2,F3,F4,F5,F6],31,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,kr,F2,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,N,F3,F4,F5,F6],32,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,kr,F3,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,N,F4,F5,F6],33,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,kr,F4,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,N,F5,F6],34,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,kr,F5,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,F4,N,F6],35,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,F4,kr,F6]).
+rmouvement([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,F4,F5,N],36,[A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,F4,F5,kr]).
+
+
+
+disp([A1,A2,A3,A4,A5,A6,B1,B2,B3,B4,B5,B6,C1,C2,C3,C4,C5,C6,D1,D2,D3,D4,D5,D6,E1,E2,E3,E4,E5,E6,F1,F2,F3,F4,F5,F6]) :-
+	write('|'),
+	write([A1,A2,A3,A4,A5,A6]),write('|'),nl,
+	write('|'),
+	write([B1,B2,B3,B4,B5,B6]),write('|'),nl,
+	write('|'),
+	write([C1,C2,C3,C4,C5,C6]),write('|'),nl,
+	write('|'),
+	write([D1,D2,D3,D4,D5,D6]),write('|'),nl,
+	write('|'),
+	write([E1,E2,E3,E4,E5,E6]),write('|'),nl,
+	write('|'),
+	write([F1,F2,F3,F4,F5,F6]),write('|'),nl,
+	nl,nl.
+	
+go :- initBoard, placement([a1,a2,a3,a4,a5,a6,b1,b2,b3,b4,b5,b6,c1,c2,c3,c4,c5,c6,d1,d2,d3,d4,d5,d6,e1,e2,e3,e4,e5,e6,f1,f2,f3,f4,f5,f6]). 
+
+
+initBoard :-
+  write('Vous etes le joueur rouge'),
+  nl,  /*On va utiliser disp, qui est définie juste au-dessus, à la ligne 46 */ 
+  disp(['01','02','03','04','05','06','07','08','09',10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]),
+  nl, 
+  write('Veuillez entrer votre Kalista sur une des deux dernieres lignes du plateau. '),
+  nl. 
+  
+placement(Board):-read(N),rmouvement(Board,N,Newboard),disp(Newboard). 
+
+
+
