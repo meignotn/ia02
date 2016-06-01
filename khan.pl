@@ -233,4 +233,4 @@ choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('
 
 %lancementJeu
 initBoard(_):-afficher_plat(_),nl,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5),choix_moveRouge(_),choix_moveOcre(_).
-main(_):-initBoard(_).
+main :-initBoard(_).
