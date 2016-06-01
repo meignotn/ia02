@@ -89,14 +89,14 @@ afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 %ChoixDesPieces 
 choix_sbire_rouge(0):-afficher_plat(_).
 choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
-choisir_sbire_rouge(_):-write('Piece rouge: colonne:'),read(A),write('Piece rouge: ligne:'),read(B),place_sbire_rouge(A,B).
+choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge(A,B).
 place_sbire_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
 place_sbire_rouge(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
 place_sbire_rouge(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
 
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
-choisir_pion_ocre(_):-write('Piece ocre: colonne:'),read(A),write('Piece ocre: ligne:'),read(B),place_sbire_ocre(A,B).
+choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre(A,B).
 place_sbire_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
 place_sbire_ocre(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
 place_sbire_ocre(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
@@ -149,7 +149,7 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH+1),cheminPossible(ORGL,OR
 %mouvement 
 
 move(ORGL,ORGH,NEWL,NEWH):-estSbireRouge(ORGL,ORGH),moveSbireRouge(ORGL,ORGH,NEWL,NEWH).
-move(ORGL,ORGH,NEWL,NEWH):-estSbireOcre(ORGL,ORGH),moveSbireOCre(ORGL,ORGH,NEWL,NEWH).
+move(ORGL,ORGH,NEWL,NEWH):-estSbireOcre(ORGL,ORGH),moveSbireOcre(ORGL,ORGH,NEWL,NEWH).
 move(ORGL,ORGH,NEWL,NEWH):-estKalistaRouge(ORGL,ORGH),moveKalistaRouge(ORGL,ORGH,NEWL,NEWH).
 move(ORGL,ORGH,NEWL,NEWH):-estKalistaOcre(ORGL,ORGH),moveKalistaOcre(ORGL,ORGH,NEWL,NEWH).
 
