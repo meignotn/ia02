@@ -89,23 +89,23 @@ afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
 %ChoixDesPieces 
 choix_sbire_rouge(0):-afficher_plat(_).
 choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
-choisir_sbire_rouge(_):-write('Piece rouge: largeur:'),read(A),write('Piece rouge: hauteur:'),read(B),place_sbire_rouge(A,B).
+choisir_sbire_rouge(_):-write('Piece rouge: colonne:'),read(A),write('Piece rouge: ligne:'),read(B),place_sbire_rouge(A,B).
 place_sbire_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
 place_sbire_rouge(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
 place_sbire_rouge(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
 
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
-choisir_pion_ocre(_):-write('Piece ocre: largeur:'),read(A),write('Piece ocre: hauteur:'),read(B),place_sbire_ocre(A,B).
+choisir_pion_ocre(_):-write('Piece ocre: colonne:'),read(A),write('Piece ocre: ligne:'),read(B),place_sbire_ocre(A,B).
 place_sbire_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
 place_sbire_ocre(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
 place_sbire_ocre(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
 
-choisir_kalista_rouge(_):-write('Kalista rouge: largeur:'),read(A),write('Kalista rouge: hauteur:'),read(B),place_kalista_rouge(A,B).
+choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
 place_kalista_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
 place_kalista_rouge(A,B):-B>4,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
 
-choisir_kalista_ocre(_):-write('Kalista ocre: largeur:'),read(A),write('Kalista ocre: hauteur:'),read(B),place_kalista_ocre(A,B).
+choisir_kalista_ocre(_):-write('Kalista ocre: colonne:'),read(A),write('Kalista ocre: ligne:'),read(B),place_kalista_ocre(A,B).
 place_kalista_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_kalista_ocre(_),!.
 place_kalista_ocre(A,B):-B<3,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
 
@@ -158,12 +158,14 @@ moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								assert(sbireR(NEWL,NEWH)),
 								afficher_plat(_).
+								
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
 								estSbireOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(sbireO(NEWL,NEWH)),
 								assert(sbireR(NEWL,NEWH)),
 								afficher_plat(_).
+								
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
 								estKalistaOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
@@ -224,11 +226,11 @@ moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
 								assert(kalistao(NEWL,NEWH)),
 								afficher_plat(_).
 
-choix_moveRouge(_):-write('largeur du pion Rouge a deplacer :'),read(A),nl,write('hauteur du pion rouge a deplacer :'),read(B),nl,write('largeur arrivée :'),read(C),nl,write('hauteur arrivée:'),read(D),move(A,B,C,D).
+choix_moveRouge(_):-write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
 
-choix_moveOcre(_):-write('largeur du pion Ocre a deplacer :'),read(A),nl,write('hauteur du pion Ocre a deplacer :'),read(B),nl,write('largeur arrivée :'),read(C),nl,write('hauteur arrivée:'),read(D),move(A,B,C,D).
+choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion Ocre a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5),choix_moveRouge(_),choix_moveOcre(_).
+initBoard(_):-afficher_plat(_),nl,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5),choix_moveRouge(_),choix_moveOcre(_).
 main(_):-initBoard(_).
