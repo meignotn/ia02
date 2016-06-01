@@ -84,7 +84,7 @@ afficher_coord(_):-write('  '),afficher_coord_aux(1).
 afficher_plateau([],_).
 afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1,afficher_liste(X,1,HAUTEUR),nl,afficher_plateau(L,HAUTEUR1).
 
-afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
+afficher_plat(_):-plateau(X2),afficher_coord(_),afficher_plateau(X2,1).
 
 %ChoixDesPieces 
 choix_sbire_rouge(0):-afficher_plat(_).
@@ -156,23 +156,23 @@ move(ORGL,ORGH,NEWL,NEWH):-estKalistaOcre(ORGL,ORGH),moveKalistaOcre(ORGL,ORGH,N
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire rouge sur une case libre */ 
 								libre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(sbireR(NEWL,NEWH)).
+								%afficher_plat(_).
 								
-moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuel prise d'un sbire ocre par un sbire rouge */ 
+moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuelle prise d'un sbire ocre par un sbire rouge */ 
 								estSbireOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(sbireO(NEWL,NEWH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(sbireR(NEWL,NEWH)).
+								%afficher_plat(_).
 								
-moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuel prise de la kalista ocre par le sbire rouge */ 
+moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuelle prise de la kalista ocre par le sbire rouge */ 
 								estKalistaOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
 								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_),nl,
-								write('Les rouges ont gagne'),nl.
+								assert(victoire(1)),
+								nl.
 
 moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire ocre sur une case libre */ 
 								libre(NEWL,NEWH),
@@ -183,53 +183,49 @@ moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Pris
 								estSbireRouge(NEWL,NEWH),
 								retract(sbireO(ORGL,ORGH)),
 								retract(sbireR(NEWL,NEWH)),
-								assert(sbireO(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(sbireO(NEWL,NEWH)).
+								%afficher_plat(_).
 moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista rouge par le sbire ocre */ 
 								estKalistaRouge(NEWL,NEWH),
 								retract(sbireO(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
 								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_), nl, 
-								write('Les ocres ont gagne'),nl.
+								assert(victoire(2)),nl.
 
 moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista rouge sur une case libre */ 
 								libre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
-								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(kalistar(NEWL,NEWH)).
+								%afficher_plat(_).
 moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Prise d'un sbire ocre par la kalista rouge */ 
 								estSbireOcre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
 								retract(sbireO(NEWL,NEWH)),
-								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(kalistar(NEWL,NEWH)).
 moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista ocre par la kalista rouge */ 
 								estKalistaOcre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
 								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_), nl,
-								write('Les rouges ont gagne').
+								assert(victoire(1)),nl. 
 								
 moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista sur une case libre*/ 
 								libre(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
-								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(kalistao(NEWL,NEWH)).
+								%afficher_plat(_).
 moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),  /*Prise d'un sbire rouge par la kalista ocre */ 
 								estSbireRouge(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
 								retract(sbireR(NEWL,NEWH)),
-								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(kalistao(NEWL,NEWH)).
+								%afficher_plat(_).
 moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista rouge par la kalista ocre */ 
 								estKalistaRouge(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
 								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_),nl,
-								write('Les ocres ont gagne').
+								assert(victoire(2)),nl. 
 
 choix_moveRouge(_):-write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
@@ -237,5 +233,31 @@ choix_moveRouge(_):-write('colonne du pion Rouge a deplacer :'),read(A),nl,write
 choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion Ocre a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),nl,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5),choix_moveRouge(_),choix_moveOcre(_).
+initBoard(_):-afficher_plat(_),nl,
+			write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),
+			nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5),
+			write('placement kalista ocre'),choisir_kalista_ocre(_),
+			write('placement sbires ocre'),choix_sbire_ocre(5),
+			boucle_tour. 
+			
+boucle_tour :- repeat,tourDeJeu,!. 
+
+:-dynamic victoire/1. 
+victoire(0). 
+
+tourDeJeu:- choix_moveRouge(_),
+			afficher_plat(_),
+			choix_moveOcre(_),
+			afficher_plat(_),
+			victoire(1), write('Les rouges ont gagne'),nl.
+			
+tourDeJeu:- choix_moveRouge(_),
+			afficher_plat(_),
+			choix_moveOcre(_),
+			afficher_plat(_),
+			victoire(2), write('Les ocres ont gagne'), nl.
+
+
+
 main :-initBoard(_).
