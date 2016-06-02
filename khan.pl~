@@ -7,6 +7,7 @@ plateau([	[2,3,1,2,2,3],
 			[3,1,2,1,3,2],
 			[2,3,1,3,1,3],
 			[2,1,3,2,2,1]]).
+			
 %kalista rouge
 :-dynamic kalistar/2.
 %sbires rouge
@@ -15,6 +16,14 @@ plateau([	[2,3,1,2,2,3],
 :-dynamic sbireO/2.
 %kalista ocre
 :-dynamic kalistao/2.
+
+
+%fin de partie
+termine(_):-not(kalistao(_,_)).
+termine(_):-not(kalistar(_,_)).
+
+victoireRouge(_):-kalistar(_,_).
+victoireOcre(_):-kalistao(_,_).
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
@@ -35,19 +44,19 @@ estOcre(L,H):-estSbireOcre(L,H).
 estOcre(L,H):-estKalistaOcre(L,H).
 %TestCase
 estCase1(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
-estCase1Aux([X|_],LARGEUR,1):-write(X),estCase1Aux2(X,LARGEUR).
+estCase1Aux([X|_],LARGEUR,1):-estCase1Aux2(X,LARGEUR).
 estCase1Aux([_|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase1Aux(Q,LARGEUR,HAUTEUR1).
 estCase1Aux2([X|_],1):-X=:=1.
 estCase1Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase1Aux2(Q,LARGEUR1).
 
 estCase2(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase2Aux(X,LARGEUR,HAUTEUR).
-estCase2Aux([X|_],LARGEUR,1):-write(X),estCase2Aux2(X,LARGEUR).
+estCase2Aux([X|_],LARGEUR,1):-estCase2Aux2(X,LARGEUR).
 estCase2Aux([_|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase2Aux(Q,LARGEUR,HAUTEUR1).
 estCase2Aux2([X|_],1):-X=:=2.
 estCase2Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase2Aux2(Q,LARGEUR1).
 
 estCase3(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase3Aux(X,LARGEUR,HAUTEUR).
-estCase3Aux([X|_],LARGEUR,1):-write(X),estCase3Aux2(X,LARGEUR).
+estCase3Aux([X|_],LARGEUR,1):-estCase3Aux2(X,LARGEUR).
 estCase3Aux([_|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase3Aux(Q,LARGEUR,HAUTEUR1).
 estCase3Aux2([X|_],1):-X=:=3.
 estCase3Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase3Aux2(Q,LARGEUR1).
@@ -84,30 +93,30 @@ afficher_coord(_):-write('  '),afficher_coord_aux(1).
 afficher_plateau([],_).
 afficher_plateau([X|L],HAUTEUR):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1,afficher_liste(X,1,HAUTEUR),nl,afficher_plateau(L,HAUTEUR1).
 
-afficher_plat(_):-plateau(X),afficher_coord(_),afficher_plateau(X,1).
+afficher_plat(_):-nl,plateau(X2),afficher_coord(_),afficher_plateau(X2,1).
 
 %ChoixDesPieces 
 choix_sbire_rouge(0):-afficher_plat(_).
 choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
-choisir_sbire_rouge(_):-write('Piece rouge: largeur:'),read(A),write('Piece rouge: hauteur:'),read(B),place_sbire_rouge(A,B).
-place_sbire_rouge(_,B):-B>2,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
-place_sbire_rouge(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
-place_sbire_rouge(A,B):-B<3,libre(A,B),assert(sbireR(A,B)),write('piece placée'),nl,!.
+choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge(A,B).
+place_sbire_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
+place_sbire_rouge(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
+place_sbire_rouge(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
 
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
-choisir_pion_ocre(_):-write('Piece ocre: largeur:'),read(A),write('Piece ocre: hauteur:'),read(B),place_sbire_ocre(A,B).
-place_sbire_ocre(_,B):-B<5,write('placement impossible'),nl,choisir_pion_ocre(_),!.
-place_sbire_ocre(A,B):-B>4,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
-place_sbire_ocre(A,B):-B>4,libre(A,B),assert(sbireO(A,B)),write('piece placée'),nl,!.
+choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre(A,B).
+place_sbire_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
+place_sbire_ocre(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
+place_sbire_ocre(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
 
-choisir_kalista_rouge(_):-write('Kalista rouge: largeur:'),read(A),write('Kalista rouge: hauteur:'),read(B),place_kalista_rouge(A,B).
-place_kalista_rouge(_,B):-B>2,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
-place_kalista_rouge(A,B):-B<3,libre(A,B),assert(kalistar(A,B)),write('kalista placée'),nl,!.
+choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
+place_kalista_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
+place_kalista_rouge(A,B):-B>4,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
 
-choisir_kalista_ocre(_):-write('Kalista ocre: largeur:'),read(A),write('Kalista ocre: hauteur:'),read(B),place_kalista_ocre(A,B).
-place_kalista_ocre(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_ocre(_),!.
-place_kalista_ocre(A,B):-B>4,libre(A,B),assert(kalistao(A,B)),write('kalista placée'),nl,!.
+choisir_kalista_ocre(_):-write('Kalista ocre: colonne:'),read(A),write('Kalista ocre: ligne:'),read(B),place_kalista_ocre(A,B).
+place_kalista_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_kalista_ocre(_),!.
+place_kalista_ocre(A,B):-B<3,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
 
 
 
@@ -149,86 +158,127 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-libre(ORGL,ORGH+1),cheminPossible(ORGL,OR
 %mouvement 
 
 move(ORGL,ORGH,NEWL,NEWH):-estSbireRouge(ORGL,ORGH),moveSbireRouge(ORGL,ORGH,NEWL,NEWH).
-move(ORGL,ORGH,NEWL,NEWH):-estSbireOcre(ORGL,ORGH),moveSbireOCre(ORGL,ORGH,NEWL,NEWH).
+move(ORGL,ORGH,NEWL,NEWH):-estSbireOcre(ORGL,ORGH),moveSbireOcre(ORGL,ORGH,NEWL,NEWH).
 move(ORGL,ORGH,NEWL,NEWH):-estKalistaRouge(ORGL,ORGH),moveKalistaRouge(ORGL,ORGH,NEWL,NEWH).
 move(ORGL,ORGH,NEWL,NEWH):-estKalistaOcre(ORGL,ORGH),moveKalistaOcre(ORGL,ORGH,NEWL,NEWH).
 
-moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire rouge sur une case libre */ 
 								libre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
-moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+								assert(sbireR(NEWL,NEWH)).
+								%afficher_plat(_).
+								
+moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuelle prise d'un sbire ocre par un sbire rouge */ 
 								estSbireOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(sbireO(NEWL,NEWH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
-moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+								assert(sbireR(NEWL,NEWH)).
+								%afficher_plat(_).
+								
+moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Eventuelle prise de la kalista ocre par le sbire rouge */ 
 								estKalistaOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
 								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(victoire(1)),
+								nl.
 
-moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
+moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire ocre sur une case libre */ 
 								libre(NEWL,NEWH),
-								retract(sbireR(ORGL,ORGH)),
-								assert(sbireR(NEWL,NEWH)),
+								retract(sbireO(ORGL,ORGH)),
+								assert(sbireO(NEWL,NEWH)),
 								afficher_plat(_).
-moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
-								estSbireOcre(NEWL,NEWH),
-								retract(sbireR(ORGL,ORGH)),
-								retract(sbireO(NEWL,NEWH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
-moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
-								estKalistaOcre(NEWL,NEWH),
-								retract(sbireR(ORGL,ORGH)),
+moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Prise d'un sbire rouge par un sbire ocre */ 
+								estSbireRouge(NEWL,NEWH),
+								retract(sbireO(ORGL,ORGH)),
+								retract(sbireR(NEWL,NEWH)),
+								assert(sbireO(NEWL,NEWH)).
+								%afficher_plat(_).
+moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista rouge par le sbire ocre */ 
+								estKalistaRouge(NEWL,NEWH),
+								retract(sbireO(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
-								assert(sbireR(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(sbireO(NEWL,NEWH)),
+								assert(victoire(2)),nl.
 
-moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista rouge sur une case libre */ 
 								libre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
-								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_).
-moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+								assert(kalistar(NEWL,NEWH)).
+								%afficher_plat(_).
+moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Prise d'un sbire ocre par la kalista rouge */ 
 								estSbireOcre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
 								retract(sbireO(NEWL,NEWH)),
-								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_).
-moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
+								assert(kalistar(NEWL,NEWH)).
+moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista ocre par la kalista rouge */ 
 								estKalistaOcre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
 								assert(kalistar(NEWL,NEWH)),
-								afficher_plat(_).
-moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
+								assert(victoire(1)),nl. 
+								
+moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista sur une case libre*/ 
 								libre(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
-								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_).
-moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
-								estSbireOcre(NEWL,NEWH),
+								assert(kalistao(NEWL,NEWH)).
+								%afficher_plat(_).
+moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),  /*Prise d'un sbire rouge par la kalista ocre */ 
+								estSbireRouge(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
 								retract(sbireR(NEWL,NEWH)),
-								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_).
-moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH),
-								estKalistaOcre(NEWL,NEWH),
+								assert(kalistao(NEWL,NEWH)).
+								%afficher_plat(_).
+moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Prise de la kalista rouge par la kalista ocre */ 
+								estKalistaRouge(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
 								assert(kalistao(NEWL,NEWH)),
-								afficher_plat(_).
+								assert(victoire(2)),nl. 
 
-choix_moveRouge(_):-write('largeur du pion Rouge a deplacer :'),read(A),nl,write('hauteur du pion rouge a deplacer :'),read(B),nl,write('largeur arrivée :'),read(C),nl,write('hauteur arrivée:'),read(D),move(A,B,C,D).
+choix_moveRouge(_):-write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
 
-choix_moveOcre(_):-write('largeur du pion Ocre a deplacer :'),read(A),nl,write('hauteur du pion Ocre a deplacer :'),read(B),nl,write('largeur arrivée :'),read(C),nl,write('hauteur arrivée:'),read(D),move(A,B,C,D).
+choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion Ocre a deplacer :'),read(B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5).
-main(_):-initBoard(_).
+
+initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,
+			afficher_plat(_),
+			nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5),
+			write('placement kalista ocre'),choisir_kalista_ocre(_),
+			write('placement sbires ocre'),choix_sbire_ocre(5),
+			tourRouge. 
+
+:-dynamic victoire/1. 
+victoire(0). 
+
+
+tourRouge:-termine(_),victoireOcre(_),nl,write('Victoire des Ocres').
+tourRouge:-afficher_plat(_),choix_moveRouge(_),tourOcre.
+tourOcre:-termine(_),victoireRouge(_),nl,write('Victoire des Rouges').
+tourOcre:-afficher_plat(_),choix_moveOcre(_),tourRouge.
+
+%creer fausse partie pour debug
+viderPlateau:-retractall(sbireO(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
+creerDebugPartie:-viderPlateau,assert(sbireR(2,2)),
+								assert(sbireR(3,2)),
+								assert(sbireR(5,1)),
+								assert(sbireR(6,3)),
+								assert(sbireR(1,4)),
+								assert(kalistar(2,3)),
+								assert(sbireO(5,2)),
+								assert(sbireO(4,2)),
+								assert(sbireO(2,6)),
+								assert(sbireO(4,4)),
+								assert(sbireO(4,5)),
+								assert(kalistao(5,5)),
+								afficher_plat(_),
+								tourRouge.
+
+
+
+
+main :-initBoard(_).
+
