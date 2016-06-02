@@ -17,7 +17,6 @@ plateau([	[2,3,1,2,2,3],
 %kalista ocre
 :-dynamic kalistao/2.
 
-
 %fin de partie
 termine(_):-not(kalistao(_,_)).
 termine(_):-not(kalistar(_,_)).
@@ -281,4 +280,36 @@ creerDebugPartie:-viderPlateau,assert(sbireR(2,2)),
 
 
 main :-initBoard(_).
+
+
+%afficher les coups possible pour une piece
+coupPossible(L,H):-estRouge(L,H),coupPossibleRouge(L,H).
+coupPossible(L,H):-estOcre(L,H),coupPossibleOcre(L,H).
+
+coupPossibleRouge(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,coupPossibleRougeAux(L,H,[],L1,H1).
+coupPossibleRouge(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleRougeAux(L,H,[],L1,H1).
+coupPossibleRouge(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleRougeAux(L,H,[],L1,H1).
+
+coupPossibleRougeAux(L,H,C,X,Y):-estCase1(L,H),Y=:=H+2,write(C).
+coupPossibleRougeAux(L,H,C,X,Y):-estCase2(L,H),Y=:=H+3,write(C).
+coupPossibleRougeAux(L,H,C,X,Y):-estCase3(L,H),Y=:=H+4,write(C).
+coupPossibleRougeAux(L,H,C,X,Y):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,coupPossibleRougeAux(L,H,C,X1,Y1).
+coupPossibleRougeAux(L,H,C,X,Y):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,coupPossibleRougeAux(L,H,C,X1,Y1).
+coupPossibleRougeAux(L,H,C,X,Y):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,coupPossibleRougeAux(L,H,C,X1,Y1).
+coupPossibleRougeAux(L,H,C,X,Y):-X1 is X+1,estPossibleRouge(L,H,X,Y),coupPossibleRougeAux(L,H,[(X,Y)|C],X1,Y).
+coupPossibleRougeAux(L,H,C,X,Y):-X1 is X+1,coupPossibleRougeAux(L,H,C,X1,Y).
+
+coupPossibleOcre(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,coupPossibleOcreAux(L,H,[],L1,H1).
+coupPossibleOcre(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleOcreAux(L,H,[],L1,H1).
+coupPossibleOcre(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleOcreAux(L,H,[],L1,H1).
+
+coupPossibleOcreAux(L,H,C,X,Y):-estCase1(L,H),Y=:=H+2,write(C).
+coupPossibleOcreAux(L,H,C,X,Y):-estCase2(L,H),Y=:=H+3,write(C).
+coupPossibleOcreAux(L,H,C,X,Y):-estCase3(L,H),Y=:=H+4,write(C).
+coupPossibleOcreAux(L,H,C,X,Y):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,coupPossibleOcreAux(L,H,C,X1,Y1).
+coupPossibleOcreAux(L,H,C,X,Y):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,coupPossibleOcreAux(L,H,C,X1,Y1).
+coupPossibleOcreAux(L,H,C,X,Y):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,coupPossibleOcreAux(L,H,C,X1,Y1).
+coupPossibleOcreAux(L,H,C,X,Y):-X1 is X+1,estPossibleOcre(L,H,X,Y),coupPossibleOcreAux(L,H,[(X,Y)|C],X1,Y).
+coupPossibleOcreAux(L,H,C,X,Y):-X1 is X+1,coupPossibleOcreAux(L,H,C,X1,Y).
+
 
