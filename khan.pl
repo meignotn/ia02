@@ -28,16 +28,11 @@ victoireOcre(_):-kalistao(_,_).
 afficher_liste([],_,_).
 afficher_liste([X|L],LARGEUR,HAUTEUR) :- afficher_pion(X,LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste(L,LARGEUR1,HAUTEUR).
 
-br(0).
-br(X):-write('-'),X1 is X-1,br(X1).
-br_aux(_):-write('   '),br(23).
-
 %FonctionTestPion.
 estSbire(L,H):-estSbireRouge(L,H).
 estSbire(L,H):-estSbireOcre(L,H).
 estKalista(L,H):-estKalistaRouge(L,H).
 estKalista(L,H):-estKalistaOcre(L,H).
-
 estSbireRouge(L,H):-sbireR(L,H).
 estSbireOcre(L,H):-sbireO(L,H).
 estKalistaRouge(L,H):-kalistar(L,H). 
@@ -46,6 +41,7 @@ estRouge(L,H):-estSbireRouge(L,H).
 estRouge(L,H):-estKalistaRouge(L,H).
 estOcre(L,H):-estSbireOcre(L,H).
 estOcre(L,H):-estKalistaOcre(L,H).
+
 %TestCase
 estCase1(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),plateau(X),estCase1Aux(X,LARGEUR,HAUTEUR).
 estCase1Aux([X|_],LARGEUR,1):-estCase1Aux2(X,LARGEUR).
@@ -65,7 +61,7 @@ estCase3Aux([_|Q],LARGEUR,HAUTEUR):-HAUTEUR1 is HAUTEUR-1,estCase3Aux(Q,LARGEUR,
 estCase3Aux2([X|_],1):-X=:=3.
 estCase3Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase3Aux2(Q,LARGEUR1).
 
-/*affichage des case du plateaux jaune=1 rose =2 rouge =3*/
+/*affichage des case du plateaux cyan=1 bleu =2 noir =3*/
 afficher_pion(X,L,H):-X =:= 1,estSbireRouge(L,H),ansi_format([bold,bg(cyan),fg(red)], ' x ',[world]),!.
 afficher_pion(X,L,H):-X =:= 1,estSbireOcre(L,H),ansi_format([bold,bg(cyan),fg(white)], ' o ',[world]),!.
 afficher_pion(X,L,H):-X =:= 1,estKalistaRouge(L,H),ansi_format([bold,bg(cyan),fg(red)], ' K ',[world]),!.
@@ -84,6 +80,7 @@ afficher_pion(X,L,H):-X =:= 3,estKalistaRouge(L,H),ansi_format([bold,bg(black),f
 afficher_pion(X,L,H):-X =:= 3,estKalistaOcre(L,H),ansi_format([bold,bg(black),fg(white)], ' K ',[world]),!.
 afficher_pion(X,_,_):-X =:= 3,ansi_format([bg(black),fg(white)], '   ',[world]),!.
 
+/*affichage des case du plateau pour un deplacement possible cyan=1 bleu =2 noir =3 vert=prise jaune=case libre*/
 afficher_pion_coup_possible(X,L,H,A,B):-X =:= 1,estSbireRouge(A,B),libre(L,H),ansi_format([bold,bg(cyan),fg(yellow)], ' x ',[world]),!.
 afficher_pion_coup_possible(X,L,H,A,B):-X =:= 1,estSbireRouge(A,B),occupe(L,H),ansi_format([bold,bg(cyan),fg(magenta)], ' x ',[world]),!.
 
