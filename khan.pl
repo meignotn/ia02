@@ -230,5 +230,7 @@ choix_moveRouge(_):-write('largeur du pion Rouge a deplacer :'),read(A),nl,write
 choix_moveOcre(_):-write('largeur du pion Ocre a deplacer :'),read(A),nl,write('hauteur du pion Ocre a deplacer :'),read(B),nl,write('largeur arrivée :'),read(C),nl,write('hauteur arrivée:'),read(D),move(A,B,C,D).
 
 %lancementJeu
-initBoard(_):-afficher_plat(_),write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5),choix_moveRouge(_),choix_moveOcre(_).
+initBoard(_):-afficher_plat(_),write('placement kalista rouge'),choisir_kalista_rouge(_),write('placement sbires rouge'),choix_sbire_rouge(5),write('placement kalista ocre'),choisir_kalista_ocre(_),write('placement sbires ocre'),choix_sbire_ocre(5).
+
+
 main(_):-initBoard(_).
