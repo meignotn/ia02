@@ -301,7 +301,7 @@ moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Pr
 
 
 %entre_movement
-choix_moveRouge(_):-nl,write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveRougeAux(A,B).
+choix_moveRouge(_):-nl,afficher_plat(_),nl,write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveRougeAux(A,B).
 choix_moveRougeAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveRouge(_).
 choix_moveRougeAux(A,B):-estOK(A,B),not(estRouge(A,B)),write('Case vide ou pion Ocre'),choix_moveRouge(_).
 choix_moveRougeAux(A,B):-nl,estOK(A,B),estRouge(A,B),afficherCoupPossible(A,B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
@@ -310,10 +310,9 @@ choix_moveRougeAux2(A,B,C,D):-estOK(C,D),not(move(A,B,C,D)),write('Deplacement i
 choix_moveRougeAux2(A,B,C,D):-estOK(C,D),move(A,B,C,D).
 
 
-choix_moveOcre(_):-nl,write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion Ocre a deplacer :'),read(B),estOcre(A,B),afficherCoupPossible(A,B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
-choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveOcreAux(A,B).
+choix_moveOcre(_):-nl,afficher_plat(_),nl,write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveOcreAux(A,B).
 choix_moveOcreAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveOcre(_).
-choix_moveOcreAux(A,B):-estOK(A,B),not(estOcre(A,B)),write('Case vide ou pion Ocre'),choix_moveOcre(_).
+choix_moveOcreAux(A,B):-estOK(A,B),not(estOcre(A,B)),write('Case vide ou pion Rouge'),choix_moveOcre(_).
 choix_moveOcreAux(A,B):-nl,estOK(A,B),estOcre(A,B),afficherCoupPossible(A,B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),move(A,B,C,D).
 choix_moveOcreAux2(A,B,C,D):-not(estOK(C,D)),write('erreur coordonnee'),choix_moveOcreAux(A,B).
 choix_moveOcreAux2(A,B,C,D):-estOK(C,D),not(move(A,B,C,D)),write('Deplacement impossible'),choix_moveOcreAux(A,B).
@@ -323,6 +322,7 @@ choix_moveOcreAux2(A,B,C,D):-estOK(C,D),move(A,B,C,D).
 
 initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,
 			afficher_plat(_),
+
 			nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
 			write('placement sbires rouge'),choix_sbire_rouge(5),
 			write('placement kalista ocre'),choisir_kalista_ocre(_),
