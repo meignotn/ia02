@@ -17,6 +17,8 @@ plateau([	[2,3,1,2,2,3],
 %kalista ocre
 :-dynamic kalistao/2.
 
+%coupPossibles
+:-dynamic cp1/3.
 %fin de partie
 termine(_):-not(kalistao(_,_)).
 termine(_):-not(kalistar(_,_)).
@@ -169,11 +171,11 @@ estPossibleOcre(ORGL,ORGH,NEWL,NEWH):-estRouge(NEWL,NEWH),estCase3(ORGL,ORGH),ch
 
 
 %cheminPossible depuis (ORGL,ORGH) vers (NEWL,NEWH)
-cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,1):-(NEWL,NEWH)\=(PREL,PREH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=1,write('ok'),!.
-cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGL1 is ORGL-1,libre(ORGL1,ORGH),(ORGL1,ORGH)\=(PREL,PREH),cheminPossible(ORGL-1,ORGH,NEWL,NEWH,ORGL,ORGH,1),write('ok').
-cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGL1 is ORGL+1,libre(ORGL1,ORGH),(ORGL1,ORGH)\=(PREL,PREH),cheminPossible(ORGL+1,ORGH,NEWL,NEWH,ORGL,ORGH,1),write('ok').
-cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGH1 is ORGH-1,libre(ORGL,ORGH1),(ORGL,ORGH1)\=(PREL,PREH),cheminPossible(ORGL,ORGH-1,NEWL,NEWH,ORGL,ORGH,1),write('ok').
-cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGH1 is ORGH+1,libre(ORGL,ORGH1),(ORGL,ORGH1)\=(PREL,PREH),cheminPossible(ORGL,ORGH+1,NEWL,NEWH,ORGL,ORGH,1),write('ok')	.
+cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,1):-(NEWL,NEWH)\=(PREL,PREH),abs(NEWL-ORGL)+abs(NEWH-ORGH)=:=1,!.
+cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGL1 is ORGL-1,libre(ORGL1,ORGH),(ORGL1,ORGH)\=(PREL,PREH),cheminPossible(ORGL-1,ORGH,NEWL,NEWH,ORGL,ORGH,1).
+cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGL1 is ORGL+1,libre(ORGL1,ORGH),(ORGL1,ORGH)\=(PREL,PREH),cheminPossible(ORGL+1,ORGH,NEWL,NEWH,ORGL,ORGH,1).
+cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGH1 is ORGH-1,libre(ORGL,ORGH1),(ORGL,ORGH1)\=(PREL,PREH),cheminPossible(ORGL,ORGH-1,NEWL,NEWH,ORGL,ORGH,1).
+cheminPossible(ORGL,ORGH,NEWL,NEWH,PREL,PREH,2):-ORGH1 is ORGH+1,libre(ORGL,ORGH1),(ORGL,ORGH1)\=(PREL,PREH),cheminPossible(ORGL,ORGH+1,NEWL,NEWH,ORGL,ORGH,1).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGL1 is ORGL-1,libre(ORGL1,ORGH),cheminPossible(ORGL1,ORGH,NEWL,NEWH,ORGL,ORGH,2).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGL1 is ORGL+1,libre(ORGL1,ORGH),cheminPossible(ORGL1,ORGH,NEWL,NEWH,ORGL,ORGH,2).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGH1 is ORGH-1,libre(ORGL,ORGH1),cheminPossible(ORGL,ORGH1,NEWL,NEWH,ORGL,ORGH,2).
@@ -304,6 +306,21 @@ afficher_liste_coup_possible([],_,_,_,_,_).
 afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- member((LARGEUR,HAUTEUR),C),afficher_pion_coup_possible(X,LARGEUR,HAUTEUR,A,B),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
 afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- afficher_pion(X,LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
 
+assertCoupPossibleAux(L,H,C,_,Y):-estCase1(L,H),Y=:=H+2,assert(cp1(L,H,C)).
+assertCoupPossibleAux(L,H,C,_,Y):-estCase2(L,H),Y=:=H+3,assert(cp1(L,H,C)).
+assertCoupPossibleAux(L,H,C,_,Y):-estCase3(L,H),Y=:=H+4,assert(cp1(L,H,C)).
+assertCoupPossibleAux(L,H,C,X,Y):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,assertCoupPossibleAux(L,H,C,X1,Y1).
+assertCoupPossibleAux(L,H,C,X,Y):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,assertCoupPossibleAux(L,H,C,X1,Y1).
+assertCoupPossibleAux(L,H,C,X,Y):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,assertCoupPossibleAux(L,H,C,X1,Y1).
+assertCoupPossibleAux(L,H,C,X,Y):-X1 is X+1,estPossible(L,H,X,Y),assertCoupPossibleAux(L,H,[(X,Y)|C],X1,Y).
+assertCoupPossibleAux(L,H,C,X,Y):-X1 is X+1,assertCoupPossibleAux(L,H,C,X1,Y).
+
+assertCoupPossible(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,assertCoupPossibleAux(L,H,[],L1,H1).
+assertCoupPossible(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,assertCoupPossibleAux(L,H,[],L1,H1).
+assertCoupPossible(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,assertCoupPossibleAux(L,H,[],L1,H1).
+
+
+
 
 %lancementJeu
 
@@ -326,7 +343,7 @@ tourOcre:-termine(_),victoireRouge(_),afficher_plat(_),nl,write('Victoire des Ro
 tourOcre:-afficher_plat(_),choix_moveOcre(_),tourRouge.
 
 /* creer fausse partie pour debug initialisée comme au début d'une vraie partie */ 
-viderPlateau:-retractall(sbireO(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
+viderPlateau:-retractall(sbreO(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
 creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 								assert(sbireR(3,5)),
 								assert(sbireR(4,6)),
@@ -349,6 +366,12 @@ main :-initBoard(_).
 
 
 %coup possible d'un joueur
-possiblesMovesRouge:-forall(sbireR(A,B),nl).
+estEnDanger.
 
-%HEURISTIQUE METHODE MINMA
+generatepossiblesMovesRouge:-retractall(cp1r(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
+generatepossiblesMovesOcre:-retractall(cp1o(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
+possibleMovesRouge(M):-generatepossiblesMovesRouge,findall((A,B,C),cp1(A,B,C),M).
+
+p
+
+%HEURISTIQUE METHODE MINMAX
