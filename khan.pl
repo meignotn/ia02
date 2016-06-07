@@ -7,7 +7,8 @@ plateau([	[2,3,1,2,2,3],
 			[3,1,2,1,3,2],
 			[2,3,1,3,1,3],
 			[2,1,3,2,2,1]]).
-			
+:-dynamic arbre/1.
+arbre([]).
 %kalista rouge
 :-dynamic kalistar/2.
 %sbires rouge
@@ -17,8 +18,9 @@ plateau([	[2,3,1,2,2,3],
 %kalista ocre
 :-dynamic kalistao/2.
 
+
 %coupPossibles
-:-dynamic cp1/3.
+:-dynamic cp1/4.
 %fin de partie
 termine(_):-not(kalistao(_,_)).
 termine(_):-not(kalistar(_,_)).
@@ -286,39 +288,32 @@ choix_moveOcreAux2(A,B,C,D):-estOK(C,D),move(A,B,C,D).
 
 /*affichage des coups possible pour une pièce */ 
 
-coupPossibleAux(L,H,C,_,Y):-estCase1(L,H),Y=:=H+2,write('coups possibles:'),write(C),affichage_coup_possible(_,C,L,H).
-coupPossibleAux(L,H,C,_,Y):-estCase2(L,H),Y=:=H+3,write('coups possibles:'),write(C),affichage_coup_possible(_,C,L,H).
-coupPossibleAux(L,H,C,_,Y):-estCase3(L,H),Y=:=H+4,write('coups possibles:'),write(C),affichage_coup_possible(_,C,L,H).
-coupPossibleAux(L,H,C,X,Y):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,coupPossibleAux(L,H,C,X1,Y1).
-coupPossibleAux(L,H,C,X,Y):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,coupPossibleAux(L,H,C,X1,Y1).
-coupPossibleAux(L,H,C,X,Y):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,coupPossibleAux(L,H,C,X1,Y1).
-coupPossibleAux(L,H,C,X,Y):-X1 is X+1,estPossible(L,H,X,Y),coupPossibleAux(L,H,[(X,Y)|C],X1,Y).
-coupPossibleAux(L,H,C,X,Y):-X1 is X+1,coupPossibleAux(L,H,C,X1,Y).
+afficherCoupPossible(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,coupPossibleAux(L,H,L1,H1,A),affichage_coup_possible(_,A,L,H).
+afficherCoupPossible(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleAux(L,H,L1,H1,A),affichage_coup_possible(_,A,L,H).
+afficherCoupPossible(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleAux(L,H,L1,H1,A),affichage_coup_possible(_,A,L,H).
 
-afficherCoupPossible(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,coupPossibleAux(L,H,[],L1,H1).
-afficherCoupPossible(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleAux(L,H,[],L1,H1).
-afficherCoupPossible(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleAux(L,H,[],L1,H1).
+%Coup Possible pour une piece
+coupPossible(L,H,M):-estCase1(L,H),L1 is L-1,H1 is H-1,coupPossibleAux(L,H,L1,H1,M).
+coupPossible(L,H,M):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleAux(L,H,L1,H1,M).
+coupPossible(L,H,M):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleAux(L,H,L1,H1,M).
 
+
+coupPossibleAux(L,H,X,Y,[]):-estCase1(L,H),Y=:=H+2.
+coupPossibleAux(L,H,X,Y,A):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,coupPossibleAux(L,H,X1,Y1,A).
+coupPossibleAux(L,H,X,Y,[]):-estCase2(L,H),Y=:=H+3.
+coupPossibleAux(L,H,X,Y,A):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,coupPossibleAux(L,H,X1,Y1,A).
+coupPossibleAux(L,H,X,Y,[]):-estCase3(L,H),Y=:=H+4.
+coupPossibleAux(L,H,X,Y,A):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,coupPossibleAux(L,H,X1,Y1,A).
+coupPossibleAux(L,H,X,Y,[(X,Y)|A]):-X1 is X+1,estPossible(L,H,X,Y),coupPossibleAux(L,H,X1,Y,A).
+coupPossibleAux(L,H,X,Y,A):-X1 is X+1,coupPossibleAux(L,H,X1,Y,A).
+
+%fonction pour affichage
 affichage_coup_possible(_,C,A,B):-nl,afficher_coord(_),plateau(X),afficher_coup_possibleAux(X,1,C,A,B).
 afficher_coup_possibleAux([],_,_,_,_).
 afficher_coup_possibleAux([X|L],HAUTEUR,C,A,B):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1,afficher_liste_coup_possible(X,1,HAUTEUR,C,A,B),nl,afficher_coup_possibleAux(L,HAUTEUR1,C,A,B).
 afficher_liste_coup_possible([],_,_,_,_,_).
 afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- member((LARGEUR,HAUTEUR),C),afficher_pion_coup_possible(X,LARGEUR,HAUTEUR,A,B),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
 afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- afficher_pion(X,LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
-
-assertCoupPossibleAux(L,H,C,_,Y):-estCase1(L,H),Y=:=H+2,assert(cp1(L,H,C)).
-assertCoupPossibleAux(L,H,C,_,Y):-estCase2(L,H),Y=:=H+3,assert(cp1(L,H,C)).
-assertCoupPossibleAux(L,H,C,_,Y):-estCase3(L,H),Y=:=H+4,assert(cp1(L,H,C)).
-assertCoupPossibleAux(L,H,C,X,Y):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,assertCoupPossibleAux(L,H,C,X1,Y1).
-assertCoupPossibleAux(L,H,C,X,Y):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,assertCoupPossibleAux(L,H,C,X1,Y1).
-assertCoupPossibleAux(L,H,C,X,Y):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,assertCoupPossibleAux(L,H,C,X1,Y1).
-assertCoupPossibleAux(L,H,C,X,Y):-X1 is X+1,estPossible(L,H,X,Y),assertCoupPossibleAux(L,H,[(X,Y)|C],X1,Y).
-assertCoupPossibleAux(L,H,C,X,Y):-X1 is X+1,assertCoupPossibleAux(L,H,C,X1,Y).
-
-assertCoupPossible(L,H):-estCase1(L,H),L1 is L-1,H1 is H-1,assertCoupPossibleAux(L,H,[],L1,H1).
-assertCoupPossible(L,H):-estCase2(L,H),L1 is L-2,H1 is H-2,assertCoupPossibleAux(L,H,[],L1,H1).
-assertCoupPossible(L,H):-estCase3(L,H),L1 is L-3,H1 is H-3,assertCoupPossibleAux(L,H,[],L1,H1).
-
 
 
 
@@ -365,13 +360,26 @@ creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 main :-initBoard(_).
 
 
-%coup possible d'un joueur
 estEnDanger.
 
-generatepossiblesMovesRouge:-retractall(cp1r(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
-generatepossiblesMovesOcre:-retractall(cp1o(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
-possibleMovesRouge(M):-generatepossiblesMovesRouge,findall((A,B,C),cp1(A,B,C),M).
+generatepossiblesMovesRouge:-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
+generatepossiblesMovesOcre:-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
+possibleMovesRouge(M):-generatepossiblesMovesRouge,findall((A,B,C,D),cp1(A,B,C,D),M).
+possibleMovesOcre(M):-generatepossiblesMovesOcre,findall((A,B,C,D),cp1(A,B,C,D),M).
 
-p
 
+%plateau origine
+:-dynamic plat_org/4.
+savePlateau:-retractall(plat_org(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_org(KR,KO,R,O)).
+testa:-plat_org(X,Y,Z,K),write(X),nl,write(Y),nl,write(Z),nl,write(K).
+%arbre [racine,[fils1...],[fils2...]]
+createArbre(A):-savePlateau,findall((X,Y,Z,K),plat_org(X,Y,Z,K),A).
+
+test(K,[],[]).
+test(K,[(A,B,C,D)|H],[X]):-test([(A,B,C,D)|K],H,[(A,B,C,D)|R]).
+
+happn([],C,[]).
+happn([K|A],B,[K|C]):-happn(A,B,C).
+
+test2(B):-createArbre(J),possibleMovesRouge(M),test(J,M,R),write(R).
 %HEURISTIQUE METHODE MINMAX
