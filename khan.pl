@@ -387,6 +387,8 @@ possibleMoveFormat([[A|B]|C],[A|R]):-possibleMoveFormat([B|C],R).
 happn([],_,[]).
 happn([K|A],B,[K|C]):-happn(A,B,C).
 
+%evaluation : possibilité de mouvement +1 , possiblité de mouvement adverse -1 ,peutmanger pion +10 , peut se faire manger -10 , peut gagner +infini, peut perdre-infini
+evaluation(R):-possibleMovesRouge(A),length(A,B),possibleMovesOcre(C),length(C,D),R is B-D.
 
 /*
 generatepossiblesMovesOcre(M):-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
