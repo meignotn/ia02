@@ -298,11 +298,11 @@ coupPossible(L,H,M):-estCase2(L,H),L1 is L-2,H1 is H-2,coupPossibleAux(L,H,L1,H1
 coupPossible(L,H,M):-estCase3(L,H),L1 is L-3,H1 is H-3,coupPossibleAux(L,H,L1,H1,M).
 
 
-coupPossibleAux(L,H,X,Y,[]):-estCase1(L,H),Y=:=H+2.
+coupPossibleAux(L,H,_,Y,[]):-estCase1(L,H),Y=:=H+2.
 coupPossibleAux(L,H,X,Y,A):-estCase1(L,H),X=:=L+2,Y1 is Y+1,X1 is L-1,coupPossibleAux(L,H,X1,Y1,A).
-coupPossibleAux(L,H,X,Y,[]):-estCase2(L,H),Y=:=H+3.
+coupPossibleAux(L,H,_,Y,[]):-estCase2(L,H),Y=:=H+3.
 coupPossibleAux(L,H,X,Y,A):-estCase2(L,H),X=:=L+3,Y1 is Y+1,X1 is L-2,coupPossibleAux(L,H,X1,Y1,A).
-coupPossibleAux(L,H,X,Y,[]):-estCase3(L,H),Y=:=H+4.
+coupPossibleAux(L,H,_,Y,[]):-estCase3(L,H),Y=:=H+4.
 coupPossibleAux(L,H,X,Y,A):-estCase3(L,H),X=:=L+4,Y1 is Y+1,X1 is L-3,coupPossibleAux(L,H,X1,Y1,A).
 coupPossibleAux(L,H,X,Y,[(X,Y)|A]):-X1 is X+1,estPossible(L,H,X,Y),coupPossibleAux(L,H,X1,Y,A).
 coupPossibleAux(L,H,X,Y,A):-X1 is X+1,coupPossibleAux(L,H,X1,Y,A).
@@ -362,8 +362,34 @@ main :-initBoard(_).
 
 estEnDanger.
 
-generatepossiblesMovesRouge:-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
-generatepossiblesMovesOcre:-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
+%trouve tout les rouges
+getRouge(M):-findall((A,B),estRouge(A,B),M).
+getOcre(M):-findall((A,B),estOcre(A,B),M).
+
+%renvoi tout les coups possible [[(ORG,ORG),(NEW,NEW)],...]
+possibleMovesRouge(B):-getRouge(M),possibleMovesAux(M,A),possibleMoveFormat(A,B).
+possibleMovesOcre(B):-getOcre(M),possibleMovesAux(M,A),possibleMoveFormat(A,B).
+
+%renvoie les coup possible pour tout la liste passé en arg
+possibleMovesAux([],[]).
+possibleMovesAux([(X,Y)|A],[R|C]):-coupPossible(X,Y,B),possibleMovesAux2(X,Y,B,R),possibleMovesAux(A,C).
+
+%modification de liste
+possibleMovesAux2(_,_,[],[]).
+possibleMovesAux2(X,Y,[(A,B)|N],[[(X,Y),(A,B)]|K]):-possibleMovesAux2(X,Y,N,K).
+
+%permet de formater les coup possible en [[(ORG,ORG),(NEW,NEW)],...]
+possibleMoveFormat([],[]).
+possibleMoveFormat([[]|C],R):-possibleMoveFormat(C,R).
+possibleMoveFormat([[A|B]|C],[A|R]):-possibleMoveFormat([B|C],R).
+
+
+happn([],_,[]).
+happn([K|A],B,[K|C]):-happn(A,B,C).
+
+
+/*
+generatepossiblesMovesOcre(M):-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
 possibleMovesRouge(M):-generatepossiblesMovesRouge,findall((A,B,C,D),cp1(A,B,C,D),M).
 possibleMovesOcre(M):-generatepossiblesMovesOcre,findall((A,B,C,D),cp1(A,B,C,D),M).
 
@@ -378,8 +404,7 @@ createArbre(A):-savePlateau,findall((X,Y,Z,K),plat_org(X,Y,Z,K),A).
 test(K,[],[]).
 test(K,[(A,B,C,D)|H],[X]):-test([(A,B,C,D)|K],H,[(A,B,C,D)|R]).
 
-happn([],C,[]).
-happn([K|A],B,[K|C]):-happn(A,B,C).
 
 test2(B):-createArbre(J),possibleMovesRouge(M),test(J,M,R),write(R).
 %HEURISTIQUE METHODE MINMAX
+*/
