@@ -17,16 +17,18 @@ arbre([]).
 :-dynamic sbireO/2.
 %kalista ocre
 :-dynamic kalistao/2.
+%khan
+:-dynamic khan/2.
 
 
 %coupPossibles
 :-dynamic cp1/4.
 %fin de partie
-termine(_):-not(kalistao(_,_)).
-termine(_):-not(kalistar(_,_)).
+termine:-not(kalistao(_,_)).
+termine:-not(kalistar(_,_)).
 
-victoireRouge(_):-kalistar(_,_).
-victoireOcre(_):-kalistao(_,_).
+victoireRouge:-termine,kalistar(_,_).
+victoireOcre:-termine,kalistao(_,_).
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
@@ -186,10 +188,10 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGH1 is ORGH+1,libre(ORGL,ORGH1),cheminP
 testdif(A,B,C,D):-(A,B)\=(C,D).
 %mouvement 
 
-move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),moveSbireRouge(ORGL,ORGH,NEWL,NEWH).
-move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireOcre(ORGL,ORGH),moveSbireOcre(ORGL,ORGH,NEWL,NEWH).
-move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estKalistaRouge(ORGL,ORGH),moveKalistaRouge(ORGL,ORGH,NEWL,NEWH).
-move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estKalistaOcre(ORGL,ORGH),moveKalistaOcre(ORGL,ORGH,NEWL,NEWH).
+move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),moveSbireRouge(ORGL,ORGH,NEWL,NEWH),retract(khan(_,_)),assert(khan(NEWL,NEWH)).
+move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireOcre(ORGL,ORGH),moveSbireOcre(ORGL,ORGH,NEWL,NEWH),retract(khan(_,_)),assert(khan(NEWL,NEWH)).
+move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estKalistaRouge(ORGL,ORGH),moveKalistaRouge(ORGL,ORGH,NEWL,NEWH),retract(khan(_,_)),assert(khan(NEWL,NEWH).
+move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estKalistaOcre(ORGL,ORGH),moveKalistaOcre(ORGL,ORGH,NEWL,NEWH),retract(khan(_,_)),assert(khan(NEWL,NEWH).
 
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire rouge sur une case libre */ 
 								libre(NEWL,NEWH),
@@ -332,13 +334,13 @@ initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases s
 victoire(0). 
 
 
-tourRouge:-termine(_),victoireOcre(_),afficher_plat(_),nl,write('Victoire des Ocres').
+tourRouge:-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
 tourRouge:-afficher_plat(_),choix_moveRouge(_),tourOcre.
-tourOcre:-termine(_),victoireRouge(_),afficher_plat(_),nl,write('Victoire des Rouges').
+tourOcre:-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
 tourOcre:-afficher_plat(_),choix_moveOcre(_),tourRouge.
 
 /* creer fausse partie pour debug initialisée comme au début d'une vraie partie */ 
-viderPlateau:-retractall(sbreO(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
+viderPlateau:-retractall(sbireO(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
 creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 								assert(sbireR(3,5)),
 								assert(sbireR(4,6)),
@@ -383,30 +385,64 @@ possibleMoveFormat([],[]).
 possibleMoveFormat([[]|C],R):-possibleMoveFormat(C,R).
 possibleMoveFormat([[A|B]|C],[A|R]):-possibleMoveFormat([B|C],R).
 
-
 happn([],_,[]).
 happn([K|A],B,[K|C]):-happn(A,B,C).
 
-%evaluation : possibilité de mouvement +1 , possiblité de mouvement adverse -1 ,peutmanger pion +10 , peut se faire manger -10 , peut gagner +infini, peut perdre-infini
-evaluation(R):-possibleMovesRouge(A),length(A,B),possibleMovesOcre(C),length(C,D),R is B-D.
+%pion=1 kalista =5
+nombrePrisePossibleRouge(M):-getRouge(A),nombrePrisePossibleRougeAux(A,M).
+nombrePrisePossibleRougeAux([],0).
+nombrePrisePossibleRougeAux([(A,B)|M],R):-coupPossible(A,B,C),nombrePrisePossibleRougeListeCoupPossible(C,X),nombrePrisePossibleRougeAux(M,K),R is X+K.
+nombrePrisePossibleRougeListeCoupPossible([],0).
+nombrePrisePossibleRougeListeCoupPossible([(A,B)|C],X1):-sbireO(A,B),nombrePrisePossibleRougeListeCoupPossible(C,X),X1 is X+2.
+nombrePrisePossibleRougeListeCoupPossible([(A,B)|C],X1):-kalistao(A,B),nombrePrisePossibleRougeListeCoupPossible(C,X),X1 is X+5.
 
-/*
-generatepossiblesMovesOcre(M):-retractall(cp1(_,_,_)),forall(estRouge(A,B),assertCoupPossible(A,B)).
-possibleMovesRouge(M):-generatepossiblesMovesRouge,findall((A,B,C,D),cp1(A,B,C,D),M).
-possibleMovesOcre(M):-generatepossiblesMovesOcre,findall((A,B,C,D),cp1(A,B,C,D),M).
+nombrePrisePossibleRougeListeCoupPossible([A|B],X):-nombrePrisePossibleRougeListeCoupPossible(B,X).
+
+nombrePrisePossibleOcre(M):-getOcre(A),nombrePrisePossibleOcreAux(A,M).
+nombrePrisePossibleOcreAux([],0).
+nombrePrisePossibleOcreAux([(A,B)|M],R):-coupPossible(A,B,C),nombrePrisePossibleOcreListeCoupPossible(C,X),nombrePrisePossibleOcreAux(M,K),R is X+K.
+nombrePrisePossibleOcreListeCoupPossible([],0).
+nombrePrisePossibleOcreListeCoupPossible([(A,B)|C],X1):-sbireR(A,B),nombrePrisePossibleOcreListeCoupPossible(C,X),X1 is X+2.
+nombrePrisePossibleOcreListeCoupPossible([(A,B)|C],X1):-kalistar(A,B),nombrePrisePossibleOcreListeCoupPossible(C,X),X1 is X+5.
+
+nombrePrisePossibleOcreListeCoupPossible([A|B],X):-nombrePrisePossibleOcreListeCoupPossible(B,X).
+
+%evaluation : possibilité de mouvement +1 , possiblité de mouvement adverse -1 ,peutmanger pion +2 , peut se faire manger -2, peut manger kalista +5,peut se faire manger kalista -100 , peut gagner +infini, peut perdre-infini
+evaluation(R):-victoireRouge,R is 'r'.
+evaluation(R):-victoireRouge,R is 'o'.	 
+evaluation(R):-possibleMovesRouge(A),length(A,B),possibleMovesOcre(C),length(C,D),nombrePrisePossibleRouge(X),nombrePrisePossibleOcre(Y),R is (B+X-D-Y).
 
 
 %plateau origine
 :-dynamic plat_org/4.
-savePlateau:-retractall(plat_org(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_org(KR,KO,R,O)).
-testa:-plat_org(X,Y,Z,K),write(X),nl,write(Y),nl,write(Z),nl,write(K).
+:-dynamic plat_1/4.
+:-dynamic plat_2/4.
+:-dynamic plat_3/4.
+
+%sauvegarde plateau seulemet 4 sauvegarde possible
+savePlateau:-not(plat_3(_,_,_,_)),plat_2(_,_,_,_),retractall(plat_3(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_3(KR,KO,R,O)).
+savePlateau:-not(plat_2(_,_,_,_)),plat_1(_,_,_,_),retractall(plat_2(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_2(KR,KO,R,O)).
+savePlateau:-not(plat_1(_,_,_,_)),plat_org(_,_,_,_),retractall(plat_1(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_1(KR,KO,R,O)).
+savePlateau:-not(plat_2(_,_,_,_)),retractall(plat_org(_,_,_,_)),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_org(KR,KO,R,O)).
+%retour etat precedent
+assertkalistar([(A,B)]):-assert(kalistar(A,B)).
+assertkalistao([(A,B)]):-assert(kalistao(A,B)).
+assertSbireR([]).
+assertSbireR([(A,B)|C]):-assert(sbireR(A,B)),assertSbireR(C).
+assertSbireO([]).
+assertSbireO([(A,B)|C]):-assert(sbireO(A,B)),assertSbireO(C).
+%retour etat precedent
+undoMove:-plat_3(A,B,C,D),viderPlateau,assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_3(_,_,_,_)).
+undoMove:-plat_2(A,B,C,D),viderPlateau,assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_2(_,_,_,_)).
+undoMove:-plat_1(A,B,C,D),viderPlateau,assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_1(_,_,_,_)).
+undoMove:-plat_org(A,B,C,D),viderPlateau,assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_org(_,_,_,_)).
+
 %arbre [racine,[fils1...],[fils2...]]
-createArbre(A):-savePlateau,findall((X,Y,Z,K),plat_org(X,Y,Z,K),A).
+createArbre(A):-savePlateau,possibleMovesOcre(B),createArbreAux(B,C),addroot(C,A).
+createArbreAux([],[]).
+createArbreAux([X|B],[[X]|A]):-createArbreAux(B,A).
 
-test(K,[],[]).
-test(K,[(A,B,C,D)|H],[X]):-test([(A,B,C,D)|K],H,[(A,B,C,D)|R]).
-
+addroot(A,['root'|A]).
 
 test2(B):-createArbre(J),possibleMovesRouge(M),test(J,M,R),write(R).
 %HEURISTIQUE METHODE MINMAX
-*/
