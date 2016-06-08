@@ -7,8 +7,7 @@ plateau([	[2,3,1,2,2,3],
 			[3,1,2,1,3,2],
 			[2,3,1,3,1,3],
 			[2,1,3,2,2,1]]).
-:-dynamic arbre/1.
-arbre([]).
+
 %kalista rouge
 :-dynamic kalistar/2.
 %sbires rouge
@@ -32,7 +31,7 @@ victoireOcre:-termine,kalistao(_,_).
 
 %affichageDuPlateau	
 afficher_liste([],_,_).
-afficher_liste([X|L],LARGEUR,HAUTEUR) :-format_afficher_liste(LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste(L,LARGEUR1,HAUTEUR).
+afficher_liste([_|L],LARGEUR,HAUTEUR) :-format_afficher_liste(LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste(L,LARGEUR1,HAUTEUR).
 
 format_afficher_liste(LARGEUR,HAUTEUR):-khan(LARGEUR,HAUTEUR),estCase1(LARGEUR,HAUTEUR),ansi_format([bg(cyan),fg(white)], '/',[world]),afficher_pion(1,LARGEUR,HAUTEUR),ansi_format([bg(cyan),fg(white)], '\\',[world]).
 format_afficher_liste(LARGEUR,HAUTEUR):-khan(LARGEUR,HAUTEUR),estCase2(LARGEUR,HAUTEUR),ansi_format([bg(blue),fg(white)], '/',[world]),afficher_pion(2,LARGEUR,HAUTEUR),ansi_format([bg(blue),fg(white)], '\\',[world]).
@@ -134,14 +133,14 @@ choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire roug
 place_sbire_rouge_S(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
 place_sbire_rouge_S(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
 place_sbire_rouge_S(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
-place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),write('piece placee'),nl.
+place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),write('piece placee'),retractall(khan(_,_)),assert(khan(A,B)),nl.
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
 choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre_S(A,B).
 place_sbire_ocre_S(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
 place_sbire_ocre_S(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
 place_sbire_ocre_S(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
-place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),write('piece placee'),nl.
+place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),write('piece placee'),retractall(khan(_,_)),assert(khan(A,B)),nl.
 
 
 choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
@@ -165,7 +164,7 @@ estOK(LARGEUR,HAUTEUR):-LARGEUR>0,LARGEUR<7,HAUTEUR>0,HAUTEUR<7 .
 respecteKhan(A,B):-estCase1(A,B),khan(C,D),estCase1(C,D).
 respecteKhan(A,B):-estCase2(A,B),khan(C,D),estCase2(C,D).
 respecteKhan(A,B):-estCase3(A,B),khan(C,D),estCase3(C,D).
-respecteKhan(A,B):-not(khan(_,_)).
+respecteKhan(_,_):-not(khan(_,_)).
 %mouvementPossible orgl->largeur du pion d origine , orh -> hauteur origine , newL -> nouvelle largeur 
 
 estPossible(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estRouge(ORGL,ORGH),respecteKhan(ORGL,ORGH),estPossibleRouge(ORGL,ORGH,NEWL,NEWH).
@@ -197,7 +196,6 @@ cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGL1 is ORGL+1,libre(ORGL1,ORGH),cheminP
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGH1 is ORGH-1,libre(ORGL,ORGH1),cheminPossible(ORGL,ORGH1,NEWL,NEWH,ORGL,ORGH,2).
 cheminPossible(ORGL,ORGH,NEWL,NEWH,3):-ORGH1 is ORGH+1,libre(ORGL,ORGH1),cheminPossible(ORGL,ORGH1,NEWL,NEWH,ORGL,ORGH,2).
 
-testdif(A,B,C,D):-(A,B)\=(C,D).
 %mouvement 
 
 move(ORGL,ORGH,NEWL,NEWH):-estOK(ORGL,ORGH),estOK(NEWL,NEWH),estSbireRouge(ORGL,ORGH),moveSbireRouge(ORGL,ORGH,NEWL,NEWH),retractall(khan(_,_)),assert(khan(NEWL,NEWH)).
@@ -330,8 +328,8 @@ affichage_coup_possible(_,C,A,B):-nl,afficher_coord(_),plateau(X),afficher_coup_
 afficher_coup_possibleAux([],_,_,_,_).
 afficher_coup_possibleAux([X|L],HAUTEUR,C,A,B):-write(HAUTEUR),write(' '),HAUTEUR1 is HAUTEUR+1,afficher_liste_coup_possible(X,1,HAUTEUR,C,A,B),nl,afficher_coup_possibleAux(L,HAUTEUR1,C,A,B).
 afficher_liste_coup_possible([],_,_,_,_,_).
-afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- member((LARGEUR,HAUTEUR),C),format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
-afficher_liste_coup_possible([X|L],LARGEUR,HAUTEUR,C,A,B) :- format_afficher_liste(LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
+afficher_liste_coup_possible([_|L],LARGEUR,HAUTEUR,C,A,B) :- member((LARGEUR,HAUTEUR),C),format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
+afficher_liste_coup_possible([_|L],LARGEUR,HAUTEUR,C,A,B) :- format_afficher_liste(LARGEUR,HAUTEUR),LARGEUR1 is LARGEUR+1, afficher_liste_coup_possible(L,LARGEUR1,HAUTEUR,C,A,B).
 format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-khan(LARGEUR,HAUTEUR),estCase1(LARGEUR,HAUTEUR),ansi_format([bg(cyan)], '/',[world]),afficher_pion_coup_possible(1,LARGEUR,HAUTEUR,A,B),ansi_format([bg(cyan)], '\\',[world]).
 format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-khan(LARGEUR,HAUTEUR),estCase2(LARGEUR,HAUTEUR),ansi_format([bg(blue)], '/',[world]),afficher_pion_coup_possible(2,LARGEUR,HAUTEUR,A,B),ansi_format([bg(blue)], '\\',[world]).
 format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-khan(LARGEUR,HAUTEUR),estCase3(LARGEUR,HAUTEUR),ansi_format([bg(black)] , '/',[world]),afficher_pion_coup_possible(3,LARGEUR,HAUTEUR,A,B),ansi_format([bg(black)], '\\',[world]).
@@ -378,13 +376,7 @@ creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 								write('debut de la partie'),
 								tourRouge.
 
-
-
-
 main :-initBoard(_).
-
-
-estEnDanger.
 
 %trouve tout les rouges
 getRouge(M):-findall((A,B),estRouge(A,B),M).
@@ -423,7 +415,7 @@ nombrePrisePossibleRougeListeCoupPossible([],0).
 nombrePrisePossibleRougeListeCoupPossible([(A,B)|C],X1):-sbireO(A,B),nombrePrisePossibleRougeListeCoupPossible(C,X),X1 is X+2.
 nombrePrisePossibleRougeListeCoupPossible([(A,B)|C],X1):-kalistao(A,B),nombrePrisePossibleRougeListeCoupPossible(C,X),X1 is X+5.
 
-nombrePrisePossibleRougeListeCoupPossible([A|B],X):-nombrePrisePossibleRougeListeCoupPossible(B,X).
+nombrePrisePossibleRougeListeCoupPossible([_|B],X):-nombrePrisePossibleRougeListeCoupPossible(B,X).
 
 nombrePrisePossibleOcre(M):-getOcre(A),nombrePrisePossibleOcreAux(A,M).
 nombrePrisePossibleOcreAux([],0).
@@ -432,7 +424,7 @@ nombrePrisePossibleOcreListeCoupPossible([],0).
 nombrePrisePossibleOcreListeCoupPossible([(A,B)|C],X1):-sbireR(A,B),nombrePrisePossibleOcreListeCoupPossible(C,X),X1 is X+2.
 nombrePrisePossibleOcreListeCoupPossible([(A,B)|C],X1):-kalistar(A,B),nombrePrisePossibleOcreListeCoupPossible(C,X),X1 is X+5.
 
-nombrePrisePossibleOcreListeCoupPossible([A|B],X):-nombrePrisePossibleOcreListeCoupPossible(B,X).
+nombrePrisePossibleOcreListeCoupPossible([_|B],X):-nombrePrisePossibleOcreListeCoupPossible(B,X).
 
 %evaluation : possibilité de mouvement +1 , possiblité de mouvement adverse -1 ,peutmanger pion +2 , peut se faire manger -2, peut manger kalista +5,peut se faire manger kalista -100 , peut gagner +infini, peut perdre-infini
 evaluation(R):-victoireRouge,R is 'r'.
@@ -471,5 +463,4 @@ createArbreAux([X|B],[[X]|A]):-createArbreAux(B,A).
 
 addroot(A,['root'|A]).
 
-test2(B):-createArbre(J),possibleMovesRouge(M),test(J,M,R),write(R).
 %HEURISTIQUE METHODE MINMAX
