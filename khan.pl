@@ -130,17 +130,19 @@ afficher_plat(_):-nl,plateau(X2),afficher_coord(_),afficher_plateau(X2,1).
 %ChoixDesPieces 
 choix_sbire_rouge(0):-afficher_plat(_).
 choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
-choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge(A,B).
-place_sbire_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
-place_sbire_rouge(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
-place_sbire_rouge(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
-
+choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge_S(A,B).
+place_sbire_rouge_S(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
+place_sbire_rouge_S(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
+place_sbire_rouge_S(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
+place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),write('piece placee'),nl.
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
-choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre(A,B).
-place_sbire_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
-place_sbire_ocre(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
-place_sbire_ocre(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
+choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre_S(A,B).
+place_sbire_ocre_S(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
+place_sbire_ocre_S(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
+place_sbire_ocre_S(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
+place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),write('piece placee'),nl.
+
 
 choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
 place_kalista_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
@@ -280,21 +282,25 @@ moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Pr
 
 
 %entre_movement
-choix_moveRouge(_):-nl,afficher_plat(_),nl,write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveRougeAux(A,B).
-choix_moveRougeAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveRouge(_).
-choix_moveRougeAux(A,B):-estOK(A,B),not(estRouge(A,B)),write('Case vide ou pion Ocre'),choix_moveRouge(_).
+choix_moveRouge:-nl,aucunMouvementRouge,write('Aucun Mouvement Possible, entrez des coordonnée pour placer un sbire, ou selectionnez un sbire pour le deplacer'),nl,retractall(khan(_,_)),write('colonne du pion Rouge a deplacer ou placer :'),read(A),nl,write('ligne du pion rouge a deplacer ou placer:'),read(B),choix_moveRougeAux(A,B).
+choix_moveRouge:-nl,write('colonne du pion Rouge a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveRougeAux(A,B).
+
+choix_moveRougeAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveRouge.
+choix_moveRougeAux(A,B):-estOK(A,B),libre(A,B),possibleMovesRouge(M),length(M,L),L==0,place_sbire_rouge(A,B),afficher_plat(_).
+choix_moveRougeAux(A,B):-estOK(A,B),not(estRouge(A,B)),write('Case vide ou pion Ocre'),choix_moveRouge.
 choix_moveRougeAux(A,B):-nl,estOK(A,B),estRouge(A,B),afficherCoupPossible(A,B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),choix_moveRougeAux2(A,B,C,D).
 choix_moveRougeAux2(A,B,C,D):-not(estOK(C,D)),write('erreur coordonnee'),choix_moveRougeAux(A,B).
-choix_moveRougeAux2(A,B,C,D):-estOK(C,D),not(estPossible(A,B,C,D)),write('Deplacement impossible'),choix_moveRouge(_).
+choix_moveRougeAux2(A,B,C,D):-estOK(C,	D),not(estPossible(A,B,C,D)),write('Deplacement impossible'),choix_moveRouge.
 choix_moveRougeAux2(A,B,C,D):-estOK(C,D),move(A,B,C,D).
 
-
-choix_moveOcre(_):-nl,afficher_plat(_),nl,write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveOcreAux(A,B).
-choix_moveOcreAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveOcre(_).
-choix_moveOcreAux(A,B):-estOK(A,B),not(estOcre(A,B)),write('Case vide ou pion Rouge'),choix_moveOcre(_).
+choix_moveOcre:-nl,aucunMouvementOcre,write('Aucun Mouvement Possible, entrez des coordonnée pour placer un sbire, ou selectionnez un sbire pour le deplacer'),nl,retractall(khan(_,_)),write('colonne du pion Ocre a deplacer ou placer :'),read(A),nl,write('ligne du pion Ocre a deplacer ou placer:'),read(B),choix_moveRougeAux(A,B).
+choix_moveOcre:-nl,write('colonne du pion Ocre a deplacer :'),read(A),nl,write('ligne du pion rouge a deplacer :'),read(B),choix_moveOcreAux(A,B).
+choix_moveOcreAux(A,B):-not(estOK(A,B)),write('erreur coordonnee'),choix_moveOcre.
+choix_moveOcreAux(A,B):-estOK(A,B),libre(A,B),possibleMovesOcre(M),length(M,L),L==0,place_sbire_ocre(A,B),afficher_plat(_).
+choix_moveOcreAux(A,B):-estOK(A,B),not(estOcre(A,B)),write('Case vide ou pion Rouge'),choix_moveOcre.
 choix_moveOcreAux(A,B):-nl,estOK(A,B),estOcre(A,B),afficherCoupPossible(A,B),nl,write('colonne arrivee :'),read(C),nl,write('ligne arrivee:'),read(D),choix_moveOcreAux2(A,B,C,D).
 choix_moveOcreAux2(A,B,C,D):-not(estOK(C,D)),write('erreur coordonnee'),choix_moveOcreAux(A,B).
-choix_moveOcreAux2(A,B,C,D):-estOK(C,D),not(estPossible(A,B,C,D)),write('Deplacement impossible'),choix_moveOcre(_).
+choix_moveOcreAux2(A,B,C,D):-estOK(C,D),not(estPossible(A,B,C,D)),write('Deplacement impossible'),choix_moveOcre.
 choix_moveOcreAux2(A,B,C,D):-estOK(C,D),move(A,B,C,D).
 
 
@@ -350,9 +356,9 @@ victoire(0).
 
 
 tourRouge:-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
-tourRouge:-afficher_plat(_),choix_moveRouge(_),tourOcre.
+tourRouge:-afficher_plat(_),choix_moveRouge,tourOcre.
 tourOcre:-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
-tourOcre:-afficher_plat(_),choix_moveOcre(_),tourRouge.
+tourOcre:-afficher_plat(_),choix_moveOcre,tourRouge.
 
 /* creer fausse partie pour debug initialisée comme au début d'une vraie partie */ 
 viderPlateau:-retractall(sbireO(_,_)),retractall(khan(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
@@ -369,6 +375,7 @@ creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 								assert(sbireO(4,2)),
 								assert(kalistao(6,1)),
 								afficher_plat(_),
+								write('debut de la partie'),
 								tourRouge.
 
 
@@ -384,8 +391,13 @@ getRouge(M):-findall((A,B),estRouge(A,B),M).
 getOcre(M):-findall((A,B),estOcre(A,B),M).
 
 %renvoi tout les coups possible [[(ORG,ORG),(NEW,NEW)],...]
-possibleMovesRouge(B):-getRouge(M),possibleMovesAux(M,A),possibleMoveFormat(A,B).
-possibleMovesOcre(B):-getOcre(M),possibleMovesAux(M,A),possibleMoveFormat(A,B).
+possibleMovesRouge(B):-getRouge(M),possibleMovesAux(M,A),possibleMoveFormat(A,B),!. %PROBLEME !!!
+possibleMovesOcre(B):-getOcre(M),possibleMovesAux(M,A),possibleMoveFormat(A,B),!.
+
+
+%ne peut pas jouer
+aucunMouvementRouge:-possibleMovesRouge(B),length(B,Z),Z=:=0.
+aucunMouvementOcre:-possibleMovesOcre(B),length(B,Z),Z=:=0.
 
 %renvoie les coup possible pour tout la liste passé en arg
 possibleMovesAux([],[]).
