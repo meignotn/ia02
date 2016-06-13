@@ -352,7 +352,6 @@ format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-estCase3(LARGEUR,HAUTE
 
 initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,
 			afficher_plat(_),
-
 			nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
 			write('placement sbires rouge'),choix_sbire_rouge(5),
 			write('placement kalista ocre'),choisir_kalista_ocre(_),
@@ -586,8 +585,7 @@ getMove([-1|K],[A|K]):-write('test'),nl,write(K),getMove(K,A).
 getMove([X|K],[A|G]):-write(X),write(K),getMove(X,A),getMove(K,G).
 getMove([A],R):-write('okM'),min(A,R).
 
-
-
+/*
 [[root,-1],
 	[[[ (2,1), (1,1)],-1],
 		[[ (6,6), (6,5)],39],
@@ -598,4 +596,4 @@ getMove([A],R):-write('okM'),min(A,R).
 		[[ (6,6), (6,5)],11]
 	]
 
-]
+] */
