@@ -128,30 +128,67 @@ estCase3Aux2([X|_],1):-X=:=3.
 estCase3Aux2([_|Q],LARGEUR):-LARGEUR1 is LARGEUR-1,estCase3Aux2(Q,LARGEUR1).
 
 %ChoixDesPieces 
-choix_sbire_rouge(0):-afficher_plat(_).
-choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_),choix_sbire_rouge(N1).
-choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge_S(A,B).
-place_sbire_rouge_S(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
-place_sbire_rouge_S(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
-place_sbire_rouge_S(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),!.
+
+%choix de N sbire rouge
+choix_sbire_rouge(0,_):-afficher_plat(_).
+choix_sbire_rouge(N,M):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(M),choix_sbire_rouge(N1,M).
+
+choix_sbire_ocre(0,_):-afficher_plat(_).
+choix_sbire_ocre(N,M):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_ocre(M),choix_sbire_ocre(N1,M).
+
+choisir_sbire_rouge(M):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge_S(A,B,M).
+place_sbire_rouge_S(_,B,1):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(1),!.
+place_sbire_rouge_S(A,B,1):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(1).
+place_sbire_rouge_S(A,B,1):-B>4,libre(A,B),assert(sbireR(A,B)),!.
+place_sbire_rouge_S(_,B,2):-B>2,write('placement impossible'),nl,choisir_sbire_rouge(2),!.
+place_sbire_rouge_S(A,B,2):-B<3,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(2).
+place_sbire_rouge_S(A,B,2):-B<3,libre(A,B),assert(sbireR(A,B)),!.
+place_sbire_rouge_S(A,_,3):-A>2,write('placement impossible'),nl,choisir_sbire_rouge(3),!.
+place_sbire_rouge_S(A,B,3):-A<3,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(3).
+place_sbire_rouge_S(A,B,3):-A<3,libre(A,B),assert(sbireR(A,B)),!.
+place_sbire_rouge_S(A,_,4):-A<5,write('placement impossible'),nl,choisir_sbire_rouge(4),!.
+place_sbire_rouge_S(A,B,4):-A>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(4).
+place_sbire_rouge_S(A,B,4):-A>4,libre(A,B),assert(sbireR(A,B)),!.
+
+choisir_sbire_ocre(M):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre_S(A,B,M).
+place_sbire_ocre_S(_,B,2):-B<5,write('placement impossible'),nl,choisir_sbire_ocre(1),!.
+place_sbire_ocre_S(A,B,2):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_ocre(1).
+place_sbire_ocre_S(A,B,2):-B>4,libre(A,B),assert(sbireO(A,B)),!.
+place_sbire_ocre_S(_,B,1):-B>2,write('placement impossible'),nl,choisir_sbire_ocre(2),!.
+place_sbire_ocre_S(A,B,1):-B<3,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_ocre(2).
+place_sbire_ocre_S(A,B,1):-B<3,libre(A,B),assert(sbireO(A,B)),!.
+place_sbire_ocre_S(A,_,4):-A>2,write('placement impossible'),nl,choisir_sbire_ocre(4),!.
+place_sbire_ocre_S(A,B,4):-A<3,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_ocre(4).
+place_sbire_ocre_S(A,B,4):-A<3,libre(A,B),assert(sbireO(A,B)),!.
+place_sbire_ocre_S(A,_,3):-A<5,write('placement impossible'),nl,choisir_sbire_ocre(3),!.
+place_sbire_ocre_S(A,B,3):-A>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_ocre(3).
+place_sbire_ocre_S(A,B,3):-A>4,libre(A,B),assert(sbireO(A,B)),!.
+
+
+choisir_kalista_rouge(M):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B,M).
+place_kalista_rouge(_,B,1):-B<5,write('placement impossible'),nl,choisir_kalista_rouge(1),!.
+place_kalista_rouge(A,B,1):-B>4,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
+place_kalista_rouge(_,B,2):-B>2,write('placement impossible'),nl,choisir_kalista_rouge(2),!.
+place_kalista_rouge(A,B,2):-B<3,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
+place_kalista_rouge(A,_,3):-A>2,write('placement impossible'),nl,choisir_kalista_rouge(3),!.
+place_kalista_rouge(A,B,3):-A<3,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
+place_kalista_rouge(A,_,4):-A<5,write('placement impossible'),nl,choisir_kalista_rouge(4),!.
+place_kalista_rouge(A,B,4):-A>4,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
+
+
+choisir_kalista_ocre(M):-write('Kalista ocre: colonne:'),read(A),write('Kalista ocre: ligne:'),read(B),place_kalista_ocre(A,B,M).
+place_kalista_ocre(_,B,2):-B<5,write('placement impossible'),nl,choisir_kalista_ocre(1),!.
+place_kalista_ocre(A,B,2):-B>4,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
+place_kalista_ocre(_,B,1):-B>2,write('placement impossible'),nl,choisir_kalista_ocre(2),!.
+place_kalista_ocre(A,B,1):-B<3,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
+place_kalista_ocre(A,_,4):-A>2,write('placement impossible'),nl,choisir_kalista_ocre(4),!.
+place_kalista_ocre(A,B,4):-A<3,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
+place_kalista_ocre(A,_,3):-A<5,write('placement impossible'),nl,choisir_kalista_ocre(3),!.
+place_kalista_ocre(A,B,3):-A>4,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
+
+%place un sbire
 place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
-choix_sbire_ocre(0):-afficher_plat(_).
-choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
-choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre_S(A,B).
-place_sbire_ocre_S(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
-place_sbire_ocre_S(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
-place_sbire_ocre_S(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),!.
 place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
-
-choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
-place_kalista_rouge(_,B):-B<5,write('placement impossible'),nl,choisir_kalista_rouge(_),!.
-place_kalista_rouge(A,B):-B>4,libre(A,B),assert(kalistar(A,B)),write('kalista placee'),nl,!.
-
-choisir_kalista_ocre(_):-write('Kalista ocre: colonne:'),read(A),write('Kalista ocre: ligne:'),read(B),place_kalista_ocre(A,B).
-place_kalista_ocre(_,B):-B>2,write('placement impossible'),nl,choisir_kalista_ocre(_),!.
-place_kalista_ocre(A,B):-B<3,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
-
-
 
 %CaseOccupeOuLibre?
 libre(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),not(estSbireRouge(LARGEUR,HAUTEUR)),not(estSbireOcre(LARGEUR,HAUTEUR)),not(estKalistaRouge(LARGEUR,HAUTEUR)),not(estKalistaOcre(LARGEUR,HAUTEUR)).
@@ -347,11 +384,13 @@ format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-estCase3(LARGEUR,HAUTE
 %lancementJeu
 initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,
 			afficher_plat(_),
+			write('choix du camp Rouge : 1 pour ligne 5,6 , 2 pour ligne 1,2 , 3 pour colonne 1,2 , 4 pour colonne 5,6 :'),
+			camp(M),
 			nl,write('Joueur Rouge 1 pour IA 0 pour Humain :'),
 			choixJ1(A),
 			nl,write('Joueur Ocre 1 pour IA 0 pour Humain :'),
 			choixJ2(B),
-			placement(A,B),
+			placement(A,B,M),
 			write('difficulte Rouge'),
 			difficulte(C),
 			write('difficulte Ocre'),
@@ -364,6 +403,15 @@ difficulte(B):-read(A),difficulteAux(A,B).
 difficulteAux(1,1).
 difficulteAux(2,2).
 difficulteAux(_,A):-difficulte(A).
+
+
+%choix camp rouge
+camp(B):-read(A),campAux(A,B).
+campAux(1,1).
+campAux(2,2).
+campAux(3,3).
+campAux(4,4).
+campAux(_,A):-camp(A).
 
 %lancementJeu
 jeu(0,0,_,_):-tourRouge(0,0,0,0).
@@ -382,39 +430,128 @@ choixAuxJ2(0,0).
 choixAuxJ2(_,A):-choixJ2(A).
 
 %placement des Piece en fonction des Joueurs
-placement(1,1):-assert(sbireR(2,5)),
-								assert(sbireR(3,5)),
-								assert(sbireR(4,6)),
-								assert(sbireR(6,6)),
-								assert(sbireR(1,5)),
-								assert(kalistar(2,6)),
-								assert(sbireO(1,2)),
-								assert(sbireO(2,2)),
-								assert(sbireO(3,2)),
-								assert(sbireO(4,1)),
-								assert(sbireO(4,2)),
-								assert(kalistao(6,1)),
+placement(1,1,1):-assert(sbireR(2,5)),
+				assert(sbireR(3,5)),
+				assert(sbireR(4,6)),
+				assert(sbireR(6,6)),
+				assert(sbireR(1,5)),
+				assert(kalistar(2,6)),
+				assert(sbireO(1,2)),
+				assert(sbireO(2,2)),
+				assert(sbireO(3,2)),
+				assert(sbireO(4,1)),
+				assert(sbireO(4,2)),
+				assert(kalistao(6,1)),
+				afficher_plat(_).
+
+placement(1,1,2):-assert(sbireO(2,5)),
+								assert(sbireO(3,5)),
+								assert(sbireO(4,6)),
+								assert(sbireO(6,6)),
+								assert(sbireO(1,5)),
+								assert(kalistao(2,6)),
+								assert(sbireR(1,2)),
+								assert(sbireR(2,2)),
+								assert(sbireR(3,2)),
+								assert(sbireR(4,1)),
+								assert(sbireR(4,2)),
+								assert(kalistar(6,1)),
 								afficher_plat(_).
-placement(0,0):-nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
-			write('placement sbires rouge'),choix_sbire_rouge(5),
-			write('placement kalista ocre'),choisir_kalista_ocre(_),
-			write('placement sbires ocre'),choix_sbire_ocre(5).
-placement(1,0):-assert(sbireR(2,5)),
-								assert(sbireR(3,5)),
-								assert(sbireR(4,6)),
+placement(1,1,3):-assert(sbireR(2,5)),
+								assert(sbireR(1,1)),
+								assert(sbireR(1,2)),
+								assert(sbireR(1,3)),
+								assert(sbireR(1,4)),
+								assert(kalistar(1,5)),
+								assert(sbireO(5,5)),
+								assert(sbireO(5,4)),
+								assert(sbireO(5,2)),
+								assert(sbireO(5,6)),
+								assert(sbireO(6,6)),
+								assert(kalistao(6,5)),
+								afficher_plat(_).
+placement(1,1,4):-assert(sbireO(2,5)),
+								assert(sbireO(1,1)),
+								assert(sbireO(1,2)),
+								assert(sbireO(1,3)),
+								assert(sbireO(1,4)),
+								assert(kalistao(1,5)),
+								assert(sbireR(5,5)),
+								assert(sbireR(5,4)),
+								assert(sbireR(5,2)),
+								assert(sbireR(5,6)),
 								assert(sbireR(6,6)),
-								assert(sbireR(1,5)),
-								assert(kalistar(2,6)),
-			write('placement kalista ocre'),choisir_kalista_ocre(_),
-			write('placement sbires ocre'),choix_sbire_ocre(5).
-placement(0,1):-
+								assert(kalistar(6,5)),
+								afficher_plat(_).
+placement(0,0,M):-nl,write('placement kalista rouge'),choisir_kalista_rouge(M),
+			write('placement sbires rouge'),choix_sbire_rouge(5,M),
+			write('placement kalista ocre'),choisir_kalista_ocre(M),
+			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+placement(1,0,1):-assert(sbireR(2,5)),
+				assert(sbireR(3,5)),
+				assert(sbireR(4,6)),
+				assert(sbireR(6,6)),
+				assert(sbireR(1,5)),
+				assert(kalistar(2,6)),
+			write('placement kalista ocre'),choisir_kalista_ocre(M),
+			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+placement(1,0,2):-assert(sbireR(1,2)),
+								assert(sbireR(2,2)),
+								assert(sbireR(3,2)),
+								assert(sbireR(4,1)),
+								assert(sbireR(4,2)),
+								assert(kalistar(6,1)),
+			write('placement kalista ocre'),choisir_kalista_ocre(M),
+			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+placement(1,0,3):-assert(sbireR(2,5)),
+								assert(sbireR(1,1)),
+								assert(sbireR(1,2)),
+								assert(sbireR(1,3)),
+								assert(sbireR(1,4)),
+								assert(kalistar(1,5)),
+			write('placement kalista ocre'),choisir_kalista_ocre(M),
+			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+placement(1,0,4):-assert(sbireR(5,5)),
+								assert(sbireR(5,4)),
+								assert(sbireR(5,2)),
+								assert(sbireR(5,6)),
+								assert(sbireR(6,6)),
+								assert(kalistar(6,5)),
+			write('placement kalista ocre'),choisir_kalista_ocre(M),
+			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+
+placement(0,1,1):-
 			write('placement kalista rouge'),choisir_kalista_rouge(_),
 			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(1,2)),
-								assert(sbireO(2,2)),
-								assert(sbireO(3,2)),
-								assert(sbireO(4,1)),
-								assert(sbireO(4,2)),
-								assert(kalistao(6,1)).
+				assert(sbireO(2,2)),
+				assert(sbireO(3,2)),
+				assert(sbireO(4,1)),
+				assert(sbireO(4,2)),
+				assert(kalistao(6,1)).
+placement(0,1,2):-
+			write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(2,5)),
+								assert(sbireO(3,5)),
+								assert(sbireO(4,6)),
+								assert(sbireO(6,6)),
+								assert(sbireO(1,5)),
+								assert(kalistao(2,6)).
+placement(0,1,3):-
+			write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(5,5)),
+								assert(sbireO(5,4)),
+								assert(sbireO(5,2)),
+								assert(sbireO(5,6)),
+								assert(sbireO(6,6)),
+								assert(kalistao(6,5)).
+placement(0,1,4):-
+			write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(2,5)),
+								assert(sbireO(1,1)),
+								assert(sbireO(1,2)),
+								assert(sbireO(1,3)),
+								assert(sbireO(1,4)),
+								assert(kalistao(1,5)).
 
 
 
