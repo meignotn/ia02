@@ -295,8 +295,6 @@ moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
 
 						
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
-								write('Voulez-vous continuer 2?'),
-								read(_), 
 								changementMagentaOcre, 
 								changementVertRouge, 
 								estSbireOcre(NEWL,NEWH),
@@ -309,7 +307,6 @@ moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH),
 moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), 
 								/*On libère le contrôle du khan précédent sur la pièce ocre coloriée en magenta qui vient de bouger */ 
 								changementMagentaOcre, 
-								write('Voulez-vous continuer 3?'),
 								/*On libère les pions rouges coloriés en vert à cause du khan */ 
 								changementVertRouge, 
 								/*Il y a une Kalista ocre sur la case */ 
@@ -474,21 +471,24 @@ choix_moveOcre(_):-write('colonne du pion Ocre a deplacer :'),read(A),nl,write('
 choix_moveOcre(_):-write('Pas de piece magenta controlee par le khan a cet endroit veuillez reessayer'), nl, choix_moveOcre(_). 
 
 /*Transformation en vert des éléments rouges sur le même type de case que le pion ocre khanisé (donc magenta) qui vient de bouger */ 
-khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase1(NEWL,NEWH), listePionsRougeCase1(Y), coloriageVert(Y). 
-khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase2(NEWL,NEWH), listePionsRougeCase2(Y), coloriageVert(Y).
-khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase3(NEWL,NEWH), listePionsRougeCase3(Y), coloriageVert(Y).
+khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase1(NEWL,NEWH), listePionsRougeCase1(Y), not(empty(Y)), coloriageVert(Y). 
+khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase2(NEWL,NEWH), listePionsRougeCase2(Y), not(empty(Y)), coloriageVert(Y).
+khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH),estCase3(NEWL,NEWH), listePionsRougeCase3(Y), not(empty(Y)), coloriageVert(Y).
+khanisationRouge(NEWL,NEWH):-estMagenta(NEWL,NEWH), findall((A,B),estRouge(A,B),Y), coloriageVert(Y). 
 
 /*Liste des pions rouge en case simple */ 
 pionsRougeCase1(X,Y):-estRouge(X,Y),estCase1(X,Y). 
-listePionsRougeCase1(Y):-findall((A,B),pionsRougeCase1(A,B),Y). 
+listePionsRougeCase1(Y):-findall((A,B),pionsRougeCase1(A,B),Y).
+/*test cas exception prolog en autorisant le déplacement */ 
+empty([]). 
 
 /*Liste des pions rouge en case double */ 
 pionsRougeCase2(X,Y):-estRouge(X,Y),estCase2(X,Y). 
-listePionsRougeCase2(Y):-findall((A,B),pionsRougeCase2(A,B),Y). 
+listePionsRougeCase2(Y):-findall((A,B),pionsRougeCase2(A,B),Y).
 
 /*Liste des pions rouge en case triple */ 
 pionsRougeCase3(X,Y):-estRouge(X,Y),estCase3(X,Y). 
-listePionsRougeCase3(Y):-findall((A,B),pionsRougeCase3(A,B),Y). 
+listePionsRougeCase3(Y):-findall((A,B),pionsRougeCase3(A,B),Y).
 
 /*Coloriage de la liste passée en paramètre du rouge vers le vert */ 
 
@@ -497,39 +497,27 @@ coloriageVert([(A,B)|Q]):-estSbireRouge(A,B),retract(sbireR(A,B)),assert(sbireV(
 coloriageVert([(A,B)|Q]):-estKalistaRouge(A,B),retract(kalistar(A,B)),assert(kalistav(A,B)), coloriageVert(Q). 
 
 /*listePionsOcreCaseX renvoie une liste avec les coordonnées de tous les pions sur une case X. coloriageMagenta colorie en magenta tous les pions de la liste passée en paramètre */ 
-khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase1(NEWL,NEWH), listePionsOcreCase1(Y), coloriageMagenta(Y). 
-khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase2(NEWL,NEWH), listePionsOcreCase2(Y), coloriageMagenta(Y). 
-khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase3(NEWL,NEWH), listePionsOcreCase3(Y), coloriageMagenta(Y). 
+khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase1(NEWL,NEWH), listePionsOcreCase1(Y), not(empty(Y)), coloriageMagenta(Y). 
+khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase2(NEWL,NEWH), listePionsOcreCase2(Y), not(empty(Y)), coloriageMagenta(Y). 
+khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), estCase3(NEWL,NEWH), listePionsOcreCase3(Y), not(empty(Y)), coloriageMagenta(Y). 
+khanisationOcre(NEWL,NEWH):-estVert(NEWL,NEWH), findall((A,B),estOcre(A,B),Y), coloriageMagenta(Y). 
 
 
 /*parcours du tableau du jeu et ajout de tous les pions ocre en case simple dans la liste Y  
-*/
-
 sbireOcreCase1(X,Y):-estSbireOcre(X,Y),estCase1(X,Y).
 reineOcreCase1(X,Y):-estKalistaOcre(X,Y),estCase1(X,Y).
- 
-pionsOcreCase1(X,Y):-sbireOcreCase1(X,Y).  
-pionsOcreCase1(X,Y):-reineOcreCase1(X,Y). 
+pionsOcreCase1(X,Y):-sbireOcreCase1(X,Y).  */ 
 
-listePionsOcreCase1(Y):-findall((A,B),pionsOcreCase1(A,B),Y). 
+pionsOcreCase1(X,Y):-estOcre(X,Y),estCase1(X,Y). 
+listePionsOcreCase1(Y):-findall((A,B),pionsOcreCase1(A,B),Y).
 
 /*Liste des pions (sbires ou kalista) en case double */ 
-sbireOcreCase2(X,Y):-estSbireOcre(X,Y),estCase2(X,Y). 
-reineOcreCase2(X,Y):-estKalistaOcre(X,Y),estCase2(X,Y).
- 
-pionsOcreCase2(X,Y):-sbireOcreCase2(X,Y).  
-pionsOcreCase2(X,Y):-reineOcreCase2(X,Y). 
 
-listePionsOcreCase2(Y):-findall((A,B),pionsOcreCase2(A,B),Y). 
-
+pionsOcreCase2(X,Y):-estOcre(X,Y),estCase2(X,Y). 
+listePionsOcreCase2(Y):-findall((A,B),pionsOcreCase2(A,B),Y).
 
 /*Liste des pions (sbires ou kalista) en case triple */ 
-sbireOcreCase3(X,Y):-estSbireOcre(X,Y),estCase3(X,Y). 
-reineOcreCase3(X,Y):-estKalistaOcre(X,Y),estCase3(X,Y).
- 
-pionsOcreCase3(X,Y):-sbireOcreCase3(X,Y).  
-pionsOcreCase3(X,Y):-reineOcreCase3(X,Y). 
-
+pionsOcreCase3(X,Y):-estOcre(X,Y),estCase3(X,Y).
 listePionsOcreCase3(Y):-findall((A,B),pionsOcreCase3(A,B),Y). 
 
 /*Coloriage de tous les éléments de la liste en paramètre du ocre vers magenta */ 
