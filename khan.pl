@@ -132,15 +132,15 @@ choix_sbire_rouge(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_sbire_rouge(_
 choisir_sbire_rouge(_):-write('Sbire rouge: colonne:'),read(A),write('Sbire rouge: ligne:'),read(B),place_sbire_rouge_S(A,B).
 place_sbire_rouge_S(_,B):-B<5,write('placement impossible'),nl,choisir_sbire_rouge(_),!.
 place_sbire_rouge_S(A,B):-B>4,occupe(A,B),write('place occupee veuillez essayer a nouveau'),nl,choisir_sbire_rouge(_).
-place_sbire_rouge_S(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),write('piece placee'),nl,!.
-place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),write('piece placee'),retractall(khan(_,_)),assert(khan(A,B)),nl.
+place_sbire_rouge_S(A,B):-B>4,libre(A,B),assert(sbireR(A,B)),!.
+place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
 choix_sbire_ocre(0):-afficher_plat(_).
 choix_sbire_ocre(N):-N>0,N1 is N-1,nl,afficher_plat(_),nl,choisir_pion_ocre(_),choix_sbire_ocre(N1).
 choisir_pion_ocre(_):-write('Sbire ocre: colonne:'),read(A),write('Sbire ocre: ligne:'),read(B),place_sbire_ocre_S(A,B).
 place_sbire_ocre_S(_,B):-B>2,write('placement impossible'),nl,choisir_pion_ocre(_),!.
 place_sbire_ocre_S(A,B):-B<3,occupe(A,B),write('place occupée veuillez essayer a nouveau'),nl,choisir_pion_ocre(_).
-place_sbire_ocre_S(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),write('piece placee'),nl,!.
-place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),write('piece placee'),retractall(khan(_,_)),assert(khan(A,B)),nl.
+place_sbire_ocre_S(A,B):-B<3,libre(A,B),assert(sbireO(A,B)),!.
+place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
 
 
 choisir_kalista_rouge(_):-write('Kalista rouge: colonne:'),read(A),write('Kalista rouge: ligne:'),read(B),place_kalista_rouge(A,B).
@@ -228,9 +228,8 @@ moveSbireRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Ev
 								estKalistaOcre(NEWL,NEWH),
 								retract(sbireR(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
-								assert(sbireR(NEWL,NEWH)),
-								assert(victoire(1)),
-								nl.
+								assert(sbireR(NEWL,NEWH))
+								.
 
 moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement du sbire ocre sur une case libre */ 
 								libre(NEWL,NEWH),
@@ -246,8 +245,8 @@ moveSbireOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Pris
 								estKalistaRouge(NEWL,NEWH),
 								retract(sbireO(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
-								assert(sbireO(NEWL,NEWH)),
-								assert(victoire(2)),nl.
+								assert(sbireO(NEWL,NEWH))
+								.
 
 moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista rouge sur une case libre */ 
 								libre(NEWL,NEWH),
@@ -263,8 +262,8 @@ moveKalistaRouge(ORGL,ORGH,NEWL,NEWH):-estPossibleRouge(ORGL,ORGH,NEWL,NEWH), /*
 								estKalistaOcre(NEWL,NEWH),
 								retract(kalistar(ORGL,ORGH)),
 								retract(kalistao(NEWL,NEWH)),
-								assert(kalistar(NEWL,NEWH)),
-								assert(victoire(1)),nl. 
+								assert(kalistar(NEWL,NEWH))
+								. 
 								
 moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Deplacement de la kalista sur une case libre*/ 
 								libre(NEWL,NEWH),
@@ -281,8 +280,8 @@ moveKalistaOcre(ORGL,ORGH,NEWL,NEWH):-estPossibleOcre(ORGL,ORGH,NEWL,NEWH), /*Pr
 								estKalistaRouge(NEWL,NEWH),
 								retract(kalistao(ORGL,ORGH)),
 								retract(kalistar(NEWL,NEWH)),
-								assert(kalistao(NEWL,NEWH)),
-								assert(victoire(2)),nl. 
+								assert(kalistao(NEWL,NEWH))
+								. 
 
 
 
@@ -352,21 +351,79 @@ format_afficher_liste_coup_possible(LARGEUR,HAUTEUR,A,B):-estCase3(LARGEUR,HAUTE
 
 initBoard(_):-viderPlateau,write('Les cases bleu clair correspondent aux cases simples, les cases bleu fonce aux cases doubles, les cases noires correspondent aux cases triples'),nl,
 			afficher_plat(_),
+			nl,write('Joueur Rouge 1 pour IA 0 pour Humain :'),
+			choixJ1(A),
+			nl,write('Joueur Ocre 1 pour IA 0 pour Humain :'),
+			choixJ2(B),
+			placement(A,B),
+			write('difficulte Rouge'),
+			difficulte(C),
+			write('difficulte Ocre'),
+			difficulte(D),
+			write('debut de la partie'),
+			jeu(A,B,C,D). 
 
-			nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
+
+difficulte(B):-read(A),difficulteAux(A,B).
+difficulteAux(1,1).
+difficulteAux(2,2).
+difficulteAux(_,A):-difficulte(A).
+
+jeu(0,0,_,_):-tourRouge(0,0,0,0).
+jeu(0,1,_,A):-tourRouge(0,1,0,A).
+jeu(1,0,A,_):-tourRougeIA(1,0,A,_).
+jeu(1,1,A,B):-tourRougeIA(1,1,A,B).
+
+
+choixJ1(B):-read(A),choixAuxJ1(A,B).
+choixAuxJ1(1,1).
+choixAuxJ1(0,0).
+choixAuxJ1(_,A):-choixJ1(A).
+choixJ2(B):-read(A),choixAuxJ2(A,B).
+choixAuxJ2(1,1).
+choixAuxJ2(0,0).
+choixAuxJ2(_,A):-choixJ2(A).
+
+placement(1,1):-assert(sbireR(2,5)),
+								assert(sbireR(3,5)),
+								assert(sbireR(4,6)),
+								assert(sbireR(6,6)),
+								assert(sbireR(1,5)),
+								assert(kalistar(2,6)),
+								assert(sbireO(1,2)),
+								assert(sbireO(2,2)),
+								assert(sbireO(3,2)),
+								assert(sbireO(4,1)),
+								assert(sbireO(4,2)),
+								assert(kalistao(6,1)),
+								afficher_plat(_).
+placement(0,0):-nl,write('placement kalista rouge'),choisir_kalista_rouge(_),
 			write('placement sbires rouge'),choix_sbire_rouge(5),
 			write('placement kalista ocre'),choisir_kalista_ocre(_),
-			write('placement sbires ocre'),choix_sbire_ocre(5),
-			tourRouge. 
+			write('placement sbires ocre'),choix_sbire_ocre(5).
+placement(1,0):-assert(sbireR(2,5)),
+								assert(sbireR(3,5)),
+								assert(sbireR(4,6)),
+								assert(sbireR(6,6)),
+								assert(sbireR(1,5)),
+								assert(kalistar(2,6)),
+			write('placement kalista ocre'),choisir_kalista_ocre(_),
+			write('placement sbires ocre'),choix_sbire_ocre(5).
+placement(0,1):-assert(sbireO(1,2)),
+								assert(sbireO(2,2)),
+								assert(sbireO(3,2)),
+								assert(sbireO(4,1)),
+								assert(sbireO(4,2)),
+								assert(kalistao(6,1)),
+			write('placement kalista rouge'),choisir_kalista_rouge(_),
+			write('placement sbires rouge'),choix_sbire_rouge(5).
 
-:-dynamic victoire/1. 
-victoire(0). 
 
 
-tourRouge:-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
-tourRouge:-afficher_plat(_),choix_moveRouge,tourOcre.
-tourOcre:-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
-tourOcre:-afficher_plat(_),choix_moveOcre,tourRouge.
+
+
+
+
 
 /* creer fausse partie pour debug initialisée comme au début d'une vraie partie */ 
 viderPlateau:-retractall(sbireO(_,_)),retractall(khan(_,_)),retractall(sbireR(_,_)),retractall(kalistar(_,_)),retractall(kalistao(_,_)).
@@ -387,6 +444,8 @@ creerDebugPartie:-viderPlateau,assert(sbireR(2,5)),
 								tourRouge.
 
 main :-initBoard(_).
+
+
 
 %trouve tout les rouges
 getRouge(M):-findall((A,B),estRouge(A,B),M).
@@ -448,12 +507,12 @@ nombrePrisePossibleOcreListeCoupPossible([_|B],X):-nombrePrisePossibleOcreListeC
  
 %evaluation : possibilité de mouvement +1 , possiblité de mouvement adverse -1 , a gagner +infini, a perdre-infini
 
-evaluationRouge('r'):-victoireRouge.
-evaluationRouge('o'):-victoireOcre.	 
+evaluationRouge(-1):-victoireRouge.
+evaluationRouge(1000):-victoireOcre.	 
 evaluationRouge(B):-possibleMovesRouge(A),length(A,B),!.
 evaluationOcre(B):-possibleMovesOcre(A),length(A,B),!.
-evaluationOcre('r'):-victoireRouge.
-evaluationOcre('o'):-victoireOcre.	 
+evaluationOcre(1000):-victoireRouge.
+evaluationOcre(-1):-victoireOcre.	 
 evaluationPlacerSbire(0):-aucunMouvementRouge,aucunMouvementOcre.
 evaluationPlacerSbire(10):-aucunMouvementRouge.
 evaluationPlacerSbire(-10):-aucunMouvementOcre.
@@ -465,14 +524,19 @@ evaluationPlacerSbire(0).
 :-dynamic plat_3/5.
 
 %sauvegarde plateau seulemet 4 sauvegarde possible // TODO si pas de khan sauvegarde impossible
-savePlateau:-not(plat_3(_,_,_,_,_)),plat_2(_,_,_,_,_),retractall(plat_3(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_3(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)),write(X1).
-savePlateau:-not(plat_2(_,_,_,_,_)),plat_1(_,_,_,_,_),retractall(plat_2(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_2(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)),write(X1).
-savePlateau:-not(plat_1(_,_,_,_,_)),plat_org(_,_,_,_,_),retractall(plat_1(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_1(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)),write(X1).
-savePlateau:-not(plat_org(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),	assert(plat_org(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)),write(X1).
+savePlateau:-not(plat_3(_,_,_,_,_)),plat_2(_,_,_,_,_),retractall(plat_3(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_3(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)).
+savePlateau:-not(plat_2(_,_,_,_,_)),plat_1(_,_,_,_,_),retractall(plat_2(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_2(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)).
+savePlateau:-not(plat_1(_,_,_,_,_)),plat_org(_,_,_,_,_),retractall(plat_1(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),assert(plat_1(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)).
+savePlateau:-not(plat_org(_,_,_,_,_)),findall((P,M),khan(P,M),K),findall((A,B),sbireR(A,B),R),findall((C,D),sbireO(C,D),O),findall((E,F),kalistar(E,F),KR),findall((G,H),kalistao(G,H),KO),	assert(plat_org(KR,KO,R,O,K)),save(X),retractall(save(_)),X1 is X+1,assert(save(X1)).
 
 %retour etat precedent
 assertkalistar([(A,B)]):-assert(kalistar(A,B)).
+assertkalistar([]).
+
 assertkalistao([(A,B)]):-assert(kalistao(A,B)).
+assertkalistao([]).
+
+
 assertkhan([]).
 assertkhan([(A,B)]):-assert(khan(A,B)).
 
@@ -481,17 +545,15 @@ assertSbireR([(A,B)|C]):-assert(sbireR(A,B)),assertSbireR(C).
 assertSbireO([]).
 assertSbireO([(A,B)|C]):-assert(sbireO(A,B)),assertSbireO(C).
 %retour etat precedent
-undoMove:-plat_3(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_3(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)),write(X1).
-undoMove:-plat_2(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_2(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)),write(X1).
-undoMove:-plat_1(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_1(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)),write(X1).
-undoMove:-plat_org(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_org(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)),write(X1).
+undoMove:-plat_3(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_3(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)).
+undoMove:-plat_2(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_2(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)).
+undoMove:-plat_1(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_1(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)).
+undoMove:-plat_org(A,B,C,D,E),viderPlateau,assertkhan(E),assertkalistar(A),assertkalistao(B),assertSbireR(C),assertSbireO(D),retractall(plat_org(_,_,_,_,_)),save(X),retractall(save(_)),X1 is X-1,assert(save(X1)).
 
 %[1,[SOUSARBRE],...]
-
+/* TEST ARBRE NEUTRE
 getFils(B,A):-N is B+1,creerListeDeListe([N,N,N],A).
 
-creerListeDeListe([],[]).
-creerListeDeListe([X|Q],[[X]|A]):-creerListeDeListe(Q,A).
 
 creerArbreProf([A],K,K,[A]):-write(A),!.
 creerArbreProf([A],K,N,[A|B]):-getFils(A,D),write(A),iteration(D,K,N,B).
@@ -500,102 +562,165 @@ creerArbreProf('root',K,N,['root'|B]):-getFils(0,D),write(A),iteration(D,K,N,B).
 iteration([],A,N,[]):-!.
 iteration([X],A,N,[G]):-A1 is A+1,creerArbreProf(X,A1,N,G).
 iteration([X|Y],A,N,[G|B]):-A1 is A+1,creerArbreProf(X,A1,N,G),iteration(Y,A,N,B).
-
+*/
 
 :-dynamic save/1.
-
-%TODO SEMBLE FONCTIONNER A TESTER
 save(0).
-creerArbreProfRouge(A,K,K,A):-write(' FIN '),!.
-creerArbreProfRouge([[(A,B),(C,D)]],K,N,[[(A,B),(C,D)]|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
-creerArbreProfRouge([(A,B)],K,N,[(A,B)|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
+
+creerListeDeListe([],[]).
+creerListeDeListe([X|Q],[[X]|A]):-creerListeDeListe(Q,A).
+
+creerArbreProfRouge(A,K,K,A):-!.
+creerArbreProfRouge([[(A,B),(C,D)]],K,N,[[(A,B),(C,D)]|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
+creerArbreProfRouge([(A,B)],K,N,[(A,B)|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
 creerArbreProfRouge('root',K,N,['root'|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
 
-iterationRouge([],_,_,[]):-write(' FIN '),!.
-iterationRouge([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),creerArbreProfOcre([[(A,B),(C,D)]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRouge(Y,E,N,H).
-iterationRouge([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),place_sbire_rouge(A,B),write('MOVE '),creerArbreProfOcre([(A,B)],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRouge(Y,E,N,H).
+iterationRouge([],_,_,[]):-!.
+iterationRouge([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-A1 is E+1,savePlateau,move(A,B,C,D),iterationRougeAux([[(A,B),(C,D)]],A1,N,G),undoMove,iterationRouge(Y,E,N,H).
+iterationRouge([[(A,B)]|Y],E,N,[G|H]):-A1 is E+1,savePlateau,place_sbire_rouge(A,B),creerArbreProfOcre([(A,B)],A1,N,G),undoMove,iterationRouge(Y,E,N,H).
 
-creerArbreProfOcre(A,K,K,A):-write(' FIN '),!.
-creerArbreProfOcre([[(A,B),(C,D)]],K,N,[[(A,B),(C,D)]|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcre(M,K,N,E).
-creerArbreProfOcre([(A,B)],K,N,[(A,B)|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcre(M,K,N,E).
+iterationRougeAux([[(A,B),(C,D)]],A1,N,G):-termine,creerArbreProfOcre([[(A,B),(C,D)]],A1,A1,G).
+iterationRougeAux([[(A,B),(C,D)]],A1,N,G):-creerArbreProfOcre([[(A,B),(C,D)]],A1,N,G).
+
+creerArbreProfOcre(A,K,K,A):-!.
+creerArbreProfOcre([[(A,B),(C,D)]],K,N,[[(A,B),(C,D)]|E]):-possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcre(M,K,N,E).
+creerArbreProfOcre([(A,B)],K,N,[(A,B)|E]):-possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcre(M,K,N,E).
 creerArbreProfOcre('root',K,N,['root'|E]):-possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcre(M,K,N,E).
 
 iterationOcre([],_,_,[]):-!.
-iterationOcre([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),creerArbreProfRouge([[(A,B),(C,D)]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcre(Y,E,N,H).
-iterationOcre([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),place_sbire_ocre(A,B),write('MOVE '),creerArbreProfRouge([(A,B)],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcre(Y,E,N,H).
+iterationOcre([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-A1 is E+1,savePlateau,move(A,B,C,D),iterationOcreAux([[(A,B),(C,D)]],A1,N,G),undoMove,iterationOcre(Y,E,N,H).
+iterationOcre([[(A,B)]|Y],E,N,[G|H]):-A1 is E+1,savePlateau,place_sbire_ocre(A,B),creerArbreProfRouge([(A,B)],A1,N,G),undoMove,iterationOcre(Y,E,N,H).
 
-%ARBRE AVEC EVAL
-creerArbreProfRougeEval(A,K,K,A):-write(' FIN '),!.
-creerArbreProfRougeEval([[(A,B),(C,D)]],K,N,[[[(A,B),(C,D)],-1]|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
-creerArbreProfRougeEval([(A,B)],K,N,[[(A,B),-1]|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRouge(M,K,N,E).
-creerArbreProfRougeEval('root',K,N,[['root',-1]|E]):-possibleMovesRouge(H),creerListeDeListe(H,M),iterationRougeEval(M,K,N,E).
+iterationOcreAux([[(A,B),(C,D)]],A1,N,G):-termine,creerArbreProfRouge([[(A,B),(C,D)]],A1,A1,G).
+iterationOcreAux([[(A,B),(C,D)]],A1,N,G):-creerArbreProfRouge([[(A,B),(C,D)]],A1,N,G).
+/*
+creerArbreEval([],[]).
+creerArbreEval(K,[-1|N]):-afils(K),creerArbreEvalAux(K,N).
+creerArbreEval(K,[1]):-estFeuille(K).
+creerArbreEvalAux([K|Q],N):-creerArbreEvalTest(Q,N).
+creerArbreEvalTest([],[]).
+creerArbreEvalTest([T|Q],[A|B]):-creerArbreEval(T,A),creerArbreEvalTest(Q,B).
 
-iterationRougeEval([],_,_,[]):-write(' FIN '),!.
-%EVALUER
-iterationRougeEval([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,A1==N,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),evaluationOcre(O),write('EVAL'),creerArbreProfOcreEval([[[(A,B),(C,D)],O]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRougeEval(Y,E,N,H).
-iterationRougeEval([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,A1==N,savePlateau,write('SAVE '),place_sbire_rouge(A,B),write('MOVE '),evaluationOcre(O),creerArbreProfOcreEval([[(A,B),O]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRougeEval(Y,E,N,H).
-%NON EVALUE
-iterationRougeEval([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),creerArbreProfOcreEval([[(A,B),(C,D)]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRougeEval(Y,E,N,H).
-iterationRougeEval([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),place_sbire_rouge(A,B),write('MOVE '),creerArbreProfOcreEval([(A,B)],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationRougeEval(Y,E,N,H).
 
-creerArbreProfOcreEval(A,K,K,A):-write(' FIN '),!.
-creerArbreProfOcreEval([[(A,B),(C,D)]],K,N,[[[(A,B),(C,D)],-1]|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcreEval(M,K,N,E).
-creerArbreProfOcreEval([(A,B)],K,N,[[(A,B),-1]|E]):-write(A),write(' '),write(B),write(' '),write(C),write(' '),write(D),write(' '),possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcreEval(M,K,N,E).
-creerArbreProfOcreEval('root',K,N,[['root',-1]|E]):-possibleMovesOcre(H),creerListeDeListe(H,M),iterationOcreEval(M,K,N,E).
+afils(A):-is_list(A),length(A,O),O>1.
+estFeuille(A):-not(afils(A)).
+*/
+creerArbreEvalRouge([],[]).
+creerArbreEvalRouge(K,['root'|N]):-isroot(K),creerArbreEvalRougeAux(K,N).
+creerArbreEvalRouge(K,[-1|N]):-afils(K),creerArbreEvalRougeAux(K,N).
+creerArbreEvalRouge(K,[A]):-estFeuille(K),moveAndEvalRouge(K,A). %TODO EVAL
+creerArbreEvalRougeAux([[(A,B),(C,D)]|Q],N):-savePlateau,move(A,B,C,D),creerArbreEvalTestRouge(Q,N),undoMove.
+creerArbreEvalRougeAux([(A,B)|Q],N):-savePlateau,place_sbire_rouge(A,B),creerArbreEvalTestRouge(Q,N),undoMove.
+creerArbreEvalRougeAux(['root'|Q],N):-creerArbreEvalTestOCre(Q,N).
 
-iterationOcreEval([],_,_,[]):-!.
+creerArbreEvalTestRouge([],[]).
+creerArbreEvalTestRouge([T|Q],[A|B]):-creerArbreEvalOcre(T,A),creerArbreEvalTestRouge(Q,B).
 
-iterationOcreEval([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,A1==N,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),evaluationRouge(O),write('EVAL'),creerArbreProfRougeEval([[(A,B),(C,D)],O],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcreEval(Y,E,N,H).
-iterationOcreEval([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,A1==N,write('SAVE '),place_sbire_ocre(A,B),write('MOVE '),evaluationRouge(O),creerArbreProfRougeEval([(A,B),O],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcreEval(Y,E,N,H).
+creerArbreEvalOcre([],[]).
+creerArbreEvalOcre(K,['root'|N]):-isroot(K),creerArbreEvalOcreAux(K,N).
+creerArbreEvalOcre(K,[-1|N]):-afils(K),creerArbreEvalOcreAux(K,N).
+creerArbreEvalOcre(K,[A]):-estFeuille(K),moveAndEvalOcre(K,A).
+creerArbreEvalOcreAux([[(A,B),(C,D)]|Q],N):-savePlateau,move(A,B,C,D),creerArbreEvalTestOCre(Q,N),undoMove.
+creerArbreEvalOcreAux([(A,B)|Q],N):-savePlateau,place_sbire_ocre(A,B),creerArbreEvalTestOCre(Q,N),undoMove.
+creerArbreEvalOcreAux(['root'|Q],N):-creerArbreEvalTestRouge(Q,N).
 
-iterationOcreEval([[[(A,B),(C,D)]]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),move(A,B,C,D),write('MOVE '),creerArbreProfRougeEval([[(A,B),(C,D)]],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcreEval(Y,E,N,H).
-iterationOcreEval([[(A,B)]|Y],E,N,[G|H]):-nl,A1 is E+1,savePlateau,write('SAVE '),place_sbire_ocre(A,B),write('MOVE '),creerArbreProfRougeEval([(A,B)],A1,N,G),write('UNDO '),undoMove,write('ok'),iterationOcreEval(Y,E,N,H).
+creerArbreEvalTestOCre([],[]).
+creerArbreEvalTestOCre([T|Q],[A|B]):-creerArbreEvalRouge(T,A),creerArbreEvalTestOCre(Q,B).
 
-getMin([],R,R).
-getMin([[[A,O]]|N],M,R):-O=<M,write(N),getMin(N,O,R).
-getMin([[[A,O]]|N],M,R):-M<O,getMin(N,M,R).
-getMin([[[A,O]]|N],R):-getMin(N,O,R).
+isroot(['root'|_]).
+afils(A):-is_list(A),length(A,O),O>1.
+estFeuille(A):-not(afils(A)).
 
-getMax([],R,R).
-getMax([[[A,O]]|N],M,R):-O>=M,write(N),getMax(N,O,R).
-getMax([[[A,O]]|N],M,R):-M>O,getMax(N,M,R).
-getMax([[[A,O]]|N],R):-getMax(N,O,R).
+moveAndEvalRouge([[(A,B),(C,D)]],O):-savePlateau,move(A,B,C,D),evaluationRouge(O),undoMove.
+moveAndEvalRouge([(A,B)],O):-savePlateau,place_sbire_rouge(A,B),evaluationRouge(O),undoMove.
+
+moveAndEvalOcre([[(A,B),(C,D)]],O):-savePlateau,move(A,B,C,D),evaluationOcre(O),undoMove.
+moveAndEvalOcre([(A,B)],O):-savePlateau,place_sbire_ocre(A,B),evaluationOcre(O),undoMove.
+
 
 min([],R,R).
 min([O|N],M,R):-O=<M,min(N,O,R).
 min([O|N],M,R):-M<O,min(N,M,R).
 min([O|N],R):-min(N,O,R).
+
+minL([],R,R).
+minL([[O]|N],M,R):-O=<M,minL(N,O,R).
+minL([[O]|N],M,R):-M<O,minL(N,M,R).
+minL([[O]|N],R):-minL(N,O,R).
+maxL([],R,R).
+maxL([['o']|N],M,R):-O>=M,maxL(N,O,R).
+maxL([['r']|N],M,R):-O>=M,maxL(N,O,R).
+maxL([[O]|N],M,R):-M>O,maxL(N,M,R).
+maxL([[O]|N],R):-maxL(N,O,R).
+
 max([],R,R).
 max([O|N],M,R):-O>=M,max(N,O,R).
 max([O|N],M,R):-M>O,max(N,M,R).
 max([O|N],R):-max(N,O,R).
 
+indexOf([Element|_], Element, 0):- !.
+indexOf([_|Tail], Element, Index):-
+  indexOf(Tail, Element, Index1),
+  !,
+  Index is Index1+1.
+
 getEval([],[]).
 getEval([[[A,O]|N]|P],[[[A,O]]|R]):-getEval(P,R).
 
-bestMove([[A,-1]|N],B):-lentgh(N,A),C is A mod 2,C==0.
-bestMove([K|N],B):-lentgh(N,A),C is A mod 2,C==1.
 
-bestMoveMin([[A,-1]|N],[[A,D]|N]):-getMin(N,D).
-bestMoveMax([[A,-1]|N],[[A,D]|N]):-getMax(N,D).
+getMove([-1|X],CPT,B):-0 is CPT mod 2,getMoveIt(X,CPT,A),min(A,B).
+getMove([-1|X],CPT,B):-1 is CPT mod 2,getMoveIt(X,CPT,A),max(A,B).
+getMove(['root'|X],CPT,A):-getMoveIt(X,CPT,A).
 
-getMove([],[]).
-getMove([-1|[K]],[A|[K]]):-write(K),getMove(K,A).
-getMove([-1|K],[A|K]):-write('test'),nl,write(K),getMove(K,A).
+getMove([A],_,A).
 
-getMove([X|K],[A|G]):-write(X),write(K),getMove(X,A),getMove(K,G).
-getMove([A],R):-write('okM'),min(A,R).
+getMoveIt([],_,[]).
+getMoveIt([X|Q],CPT,[A|R]):-CPT1 is CPT+1,getMove(X,CPT1,A),getMoveIt(Q,CPT,R).
 
+bestMoveRouge(DIF,MOVE):-nl,write('creation arbre de jeu'),creerArbreProfRouge('root',0,DIF,A),nl,write('creation arbre value'),creerArbreEvalRouge(A,B),write('recherche du meilleur coup'),nl,getMove(B,0,R),min(R,M),indexOf(R,M,T),T1 is T+1,nth0(T1,A,P),write('meilleur Coup Trouve'),write(T),write(A),nl,bestMoveFormat(P,MOVE).
+bestMoveOcre(DIF,MOVE):-nl,write('creation arbre de jeu'),creerArbreProfOcre('root',0,DIF,A),nl,write('creation arbre value'),creerArbreEvalOcre(A,B),write('recherche du meilleur coup'),nl,getMove(B,0,R),min(R,M),indexOf(R,M,T),T1 is T+1,nth0(T1,A,P),write('meilleur Coup Trouve'),write(T),write(A),nl,bestMoveFormat(P,MOVE).
 
+bestMoveFormat([[ (A, B), (C, D)]|K],[ (A, B), (C, D)]).
+bestMoveFormat([ (A, B)|K], (A, B)).
 
+doMoveRouge([ (A, B), (C, D)]):-move(A,B,C,D).
+doMoveRouge( (A, B)):-place_sbire_rouge(A,B).
+doMoveOcre([ (A, B), (C, D)]):-move(A,B,C,D).
+doMoveOcre((C, D)):-place_sbire_ocre(A,B).
+
+tourRougeIA(1,1,DIFR,DIFO):-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
+tourRougeIA(1,1,DIFR,DIFO):-bestMoveRouge(DIFR,MOVE),doMoveRouge(MOVE),afficher_plat(_),tourOcreIA(1,1,DIFR,DIFO).
+tourOcreIA(1,1,DIFR,DIFO):-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
+tourOcreIA(1,1,DIFR,DIFO):-bestMoveOcre(DIFO,MOVE),doMoveRouge(MOVE),afficher_plat(_),tourRougeIA(1,1,DIFR,DIFO).
+
+tourRougeIA(1,0,DIF,_):-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
+tourRougeIA(1,0,DIF,_):-bestMoveRouge(DIF,MOVE),doMoveRouge(MOVE),afficher_plat(_),tourOcre(1,0,DIF,_).
+tourOcreIA(0,1,_,DIF):-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
+tourOcreIA(0,1,_,DIF):-bestMoveOcre(DIF,MOVE),doMoveRouge(MOVE),afficher_plat(_),tourRouge(0,1,_,DIF).
+
+tourRouge(0,0,_,_):-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
+tourRouge(0,0,_,_):-afficher_plat(_),choix_moveRouge,tourOcre.
+tourOcre(0,0,_,_):-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
+tourOcre(0,0,_,_):-afficher_plat(_),choix_moveOcre,tourRouge.
+
+tourRouge(0,1,_,DIF):-termine,victoireOcre,afficher_plat(_),nl,write('Victoire des Ocres').
+tourRouge(0,1,_,DIF):-afficher_plat(_),choix_moveRouge,tourOcreIA(0,1,_,DIF).
+tourOcre(1,0,DIF,_):-termine,victoireRouge,afficher_plat(_),nl,write('Victoire des Rouges').
+tourOcre(1,0,DIF,_):-afficher_plat(_),choix_moveOcre,tourRougeIA(1,0,DIF,_).
+
+/*
 [[root,-1],
-	[[[ (2,1), (1,1)],-1],
+	[[[ (2,1), (1,1)],-1],creerArbreEvalOcreAux/2
 		[[ (6,6), (6,5)],39],
 		[[ (6,6), (6,5)],20]
 	],
 	[[[ (2,1), (1,1)],-1],
 		[[ (6,6), (6,5)],10],
+
+
 		[[ (6,6), (6,5)],11]
 	]
 
 ]
+*/
+%
