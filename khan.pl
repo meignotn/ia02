@@ -493,32 +493,32 @@ placement(1,0,1):-assert(sbireR(2,5)),
 				assert(sbireR(6,6)),
 				assert(sbireR(1,5)),
 				assert(kalistar(2,6)),
-			write('placement kalista ocre'),choisir_kalista_ocre(M),
-			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+			write('placement kalista ocre'),choisir_kalista_ocre(1),
+			write('placement sbires ocre'),choix_sbire_ocre(5,1).
 placement(1,0,2):-assert(sbireR(1,2)),
 								assert(sbireR(2,2)),
 								assert(sbireR(3,2)),
 								assert(sbireR(4,1)),
 								assert(sbireR(4,2)),
 								assert(kalistar(6,1)),
-			write('placement kalista ocre'),choisir_kalista_ocre(M),
-			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+			write('placement kalista ocre'),choisir_kalista_ocre(2),
+			write('placement sbires ocre'),choix_sbire_ocre(5,2).
 placement(1,0,3):-assert(sbireR(2,5)),
 								assert(sbireR(1,1)),
 								assert(sbireR(1,2)),
 								assert(sbireR(1,3)),
 								assert(sbireR(1,4)),
 								assert(kalistar(1,5)),
-			write('placement kalista ocre'),choisir_kalista_ocre(M),
-			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+			write('placement kalista ocre'),choisir_kalista_ocre(3),
+			write('placement sbires ocre'),choix_sbire_ocre(5,3).
 placement(1,0,4):-assert(sbireR(5,5)),
 								assert(sbireR(5,4)),
 								assert(sbireR(5,2)),
 								assert(sbireR(5,6)),
 								assert(sbireR(6,6)),
 								assert(kalistar(6,5)),
-			write('placement kalista ocre'),choisir_kalista_ocre(M),
-			write('placement sbires ocre'),choix_sbire_ocre(5,M).
+			write('placement kalista ocre'),choisir_kalista_ocre(4),
+			write('placement sbires ocre'),choix_sbire_ocre(5,4).
 
 placement(0,1,1):-
 			write('placement kalista rouge'),choisir_kalista_rouge(_),
