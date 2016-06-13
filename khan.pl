@@ -187,8 +187,8 @@ place_kalista_ocre(A,_,3):-A<5,write('placement impossible'),nl,choisir_kalista_
 place_kalista_ocre(A,B,3):-A>4,libre(A,B),assert(kalistao(A,B)),write('kalista placee'),nl,!.
 
 %place un sbire
-place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
-place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),retractall(khan(_,_)),assert(khan(A,B)),nl.
+place_sbire_rouge(A,B):-findall((A,B),sbireR(A,B),M),length(M,R),R<5,assert(sbireR(A,B)),retractall(khan(_,_)),assert(khan(A,B)).
+place_sbire_ocre(A,B):-findall((A,B),sbireO(A,B),M),length(M,R),R<5,assert(sbireO(A,B)),retractall(khan(_,_)),assert(khan(A,B)).
 
 %CaseOccupeOuLibre?
 libre(LARGEUR,HAUTEUR):-estOK(LARGEUR,HAUTEUR),not(estSbireRouge(LARGEUR,HAUTEUR)),not(estSbireOcre(LARGEUR,HAUTEUR)),not(estKalistaRouge(LARGEUR,HAUTEUR)),not(estKalistaOcre(LARGEUR,HAUTEUR)).
