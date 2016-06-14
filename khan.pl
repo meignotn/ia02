@@ -493,7 +493,7 @@ placement(1,0,1):-assert(sbireR(2,5)),
 				assert(sbireR(6,6)),
 				assert(sbireR(1,5)),
 				assert(kalistar(2,6)),
-			write('placement kalista ocre'),choisir_kalista_ocre(1),
+			write('placement kalista ocre'),choisir_kalista_ocre(1,1),
 			write('placement sbires ocre'),choix_sbire_ocre(5,1).
 placement(1,0,2):-assert(sbireR(1,2)),
 								assert(sbireR(2,2)),
@@ -501,7 +501,7 @@ placement(1,0,2):-assert(sbireR(1,2)),
 								assert(sbireR(4,1)),
 								assert(sbireR(4,2)),
 								assert(kalistar(6,1)),
-			write('placement kalista ocre'),choisir_kalista_ocre(2),
+			write('placement kalista ocre'),choisir_kalista_ocre(2,2),
 			write('placement sbires ocre'),choix_sbire_ocre(5,2).
 placement(1,0,3):-assert(sbireR(2,5)),
 								assert(sbireR(1,1)),
@@ -521,32 +521,32 @@ placement(1,0,4):-assert(sbireR(5,5)),
 			write('placement sbires ocre'),choix_sbire_ocre(5,4).
 
 placement(0,1,1):-
-			write('placement kalista rouge'),choisir_kalista_rouge(_),
-			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(1,2)),
+			write('placement kalista rouge'),choisir_kalista_rouge(1),
+			write('placement sbires rouge'),choix_sbire_rouge(5,1),assert(sbireO(1,2)),
 				assert(sbireO(2,2)),
 				assert(sbireO(3,2)),
 				assert(sbireO(4,1)),
 				assert(sbireO(4,2)),
 				assert(kalistao(6,1)).
 placement(0,1,2):-
-			write('placement kalista rouge'),choisir_kalista_rouge(_),
-			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(2,5)),
+			write('placement kalista rouge'),choisir_kalista_rouge(2),
+			write('placement sbires rouge'),choix_sbire_rouge(5,2),assert(sbireO(2,5)),
 								assert(sbireO(3,5)),
 								assert(sbireO(4,6)),
 								assert(sbireO(6,6)),
 								assert(sbireO(1,5)),
 								assert(kalistao(2,6)).
 placement(0,1,3):-
-			write('placement kalista rouge'),choisir_kalista_rouge(_),
-			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(5,5)),
+			write('placement kalista rouge'),choisir_kalista_rouge(3),
+			write('placement sbires rouge'),choix_sbire_rouge(5,3),assert(sbireO(5,5)),
 								assert(sbireO(5,4)),
 								assert(sbireO(5,2)),
 								assert(sbireO(5,6)),
 								assert(sbireO(6,6)),
 								assert(kalistao(6,5)).
 placement(0,1,4):-
-			write('placement kalista rouge'),choisir_kalista_rouge(_),
-			write('placement sbires rouge'),choix_sbire_rouge(5),assert(sbireO(2,5)),
+			write('placement kalista rouge'),choisir_kalista_rouge(4),
+			write('placement sbires rouge'),choix_sbire_rouge(5,4),assert(sbireO(2,5)),
 								assert(sbireO(1,1)),
 								assert(sbireO(1,2)),
 								assert(sbireO(1,3)),
